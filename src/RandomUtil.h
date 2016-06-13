@@ -1,6 +1,9 @@
 #ifndef RANDOMUTIL_H
 #define RANDOMUTIL_H
 
+#include <ctime>
+#include <cstdlib>
+
 class RandomUtil {
 
   public:
