@@ -1,3 +1,3 @@
-# Neural Network - Genetic Algorithm - C++ Implementation
+## Neural Network - Genetic Algorithm - C++ Implementation
 
 (work in progress)
