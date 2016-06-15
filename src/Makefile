@@ -1,4 +1,4 @@
-objects: Genome.cpp Neuron.cpp
+objects: Genome.cpp Neuron.cpp GeneticAlgorithm.cpp
 	g++ -c $^
 
 clean:

@@ -5,37 +5,33 @@
 #include "Genome.h"
 
 Genome::Genome(int n) {
-
-  m_gene_size = n;
-  m_genes = (float *) calloc(n, sizeof(float));
+  m_genes.reserve(n);
 
   for(int i = 0; i < n; i++) {
     m_genes[i] = RandomUtil::nextClampedFloat();
   }
 }
 
-Genome::Genome(float fitness, float * genes, int gene_size, bool mutate) {
+Genome::Genome(float fitness, vector<float> genes, bool mutate) {
   m_fitness = fitness;
   m_genes = genes;
-  m_gene_size = gene_size;
   
   if (mutate) {
     Genome::mutate();
   }
 }
 
-Genome::Genome(float fitness, float * genes, int gene_size) {
+Genome::Genome(float fitness, vector<float> genes) {
   m_fitness = fitness;
   m_genes = genes;
-  m_gene_size = gene_size;
 }
 
 Genome * Genome::clone() {
-  return new Genome(m_fitness, m_genes, m_gene_size);
+  return new Genome(m_fitness, m_genes);
 }
 
 void Genome::mutate(float rate) {
-  for(int i = 0; i < m_gene_size; i++) {
+  for(int i = 0; i < m_genes.size(); i++) {
     float rnd = RandomUtil::nextClampedFloat();
     if (rnd < rate) {
       m_genes[i] *= RandomUtil::nextClampedFloat();

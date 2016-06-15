@@ -16,6 +16,11 @@ class RandomUtil {
       srand (static_cast <unsigned> (time(0)));
       return nextFloat() - nextFloat();
     }
+
+    static bool nextBoolean() {
+      srand (static_cast <unsigned> (time(0)));
+      return rand() % 2 == 1;
+    }
 };
 
 

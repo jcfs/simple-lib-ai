@@ -21,15 +21,14 @@ class GeneticAlgorithm {
     GeneticAlgorithm(int population_size, vector<float> genes);
     
     void breed();
-    Genome getFittest();
-    list<Genome> getFittest(int n);
-    int getGeneration() { return m_regeneration; }
-    int getPopulation() { return m_population; }
+    Genome * getFittest();
+    list<Genome *> getFittest(int n);
+    int getGeneration() { return m_generation; }
+    list<Genome *> getPopulation() { return m_population; }
     
   private:
-    Genome crossOver(Genome father, Genome mother);
-
-
-}
+    Genome * crossOver(Genome * father, Genome * mother);
+    static bool compareGenome(Genome * a, Genome * b);
+};
 
 #endif

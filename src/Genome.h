@@ -3,17 +3,20 @@
 
 #define MUTATION_RATE 0.20f
 
+#include <vector>
+
+using namespace std;
+
 class Genome {
   private: 
     float m_fitness;
-    float * m_genes;
-    int m_gene_size;
+    vector<float> m_genes;
 
   public:
     /* constructors */
     Genome(int n);
-    Genome(float fitness, float * genes, int gene_size);
-    Genome(float fitness, float * genes, int gene_size, bool mutate);
+    Genome(float fitness, vector<float> genes);
+    Genome(float fitness, vector<float> genes, bool mutate);
     
     /* aux methods */
     Genome * clone();
@@ -21,8 +24,8 @@ class Genome {
     void mutate(float rate);
 
     /* getters/setters */
-    float * getGenes() { return m_genes; }
-    void setGenes(float * genes) { m_genes = genes; }
+    vector<float> getGenes() { return m_genes; }
+    void setGenes(vector<float> genes) { m_genes = genes; }
     float getFitness() { return m_fitness; }
     void setFitness(float fitness) { m_fitness = fitness; }
 };
