@@ -2,7 +2,5 @@ objects: Genome.cpp Neuron.cpp GeneticAlgorithm.cpp
 	g++ -c $^
 
 clean:
-	rm *.o
+	@rm -f *.o
 
-all: %.o
-	g++ -o main $^
