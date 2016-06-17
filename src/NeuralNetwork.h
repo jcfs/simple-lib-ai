@@ -9,15 +9,15 @@ using namespace std;
 
 class NeuralNetwork {
   private:
-    list<list<Neuron *>> m_hidden;
+    list<list<Neuron *> > m_hidden;
     list<Neuron *> m_output; 
   
   public:
     /* contstuctor */
-    NeuralNetwork(int inputs, int outputs, int hidden, neuron_hidden);
+    NeuralNetwork(int inputs, int outputs, int hidden, int neuron_hidden);
     
     /* main update method */
-    list<float> update(list<float> input);
+    vector<float> update(vector<float> input);
     
     /* import and export information to later reuse */
     void importWeights(vector<float> weights);
@@ -25,8 +25,8 @@ class NeuralNetwork {
     int getWeightCount();
     
   private:
-    list<float> evaluateHiddenLayers(list<float> inputs);
-    list<float> evaluateOutputLayer(list<float> hidden_output);
-}
+    vector<float> evaluateHiddenLayers(vector<float> inputs);
+    vector<float> evaluateOutputLayer(vector<float> hidden_output);
+};
 
 #endif
