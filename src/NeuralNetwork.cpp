@@ -1,36 +1,36 @@
 #include <list>
-
 #include "NeuralNetwork.h"
 
 NeuralNetwork::NeuralNetwork(int inputs, int outputs, int hidden, int neuron_hidden) {
+  // initialize the hidden layers - the first layer is initialized with
+  // as many inputs ad the number of inputs to the network
+  // the subsequent layers will be initialized with as many inputs as neurons
+  // per hidden layer
   for(int i = 0; i < hidden; i++) {
     list<Neuron *> neurons;
-    
     for(int j = 0; j < neuron_hidden; j++) {
-      if (i == 0) {
-        neurons.push_back(new Neuron(inputs + 1));
-      } else {
-        neurons.push_back(new Neuron(neuron_hidden + 1));
-      }
+      neurons.push_back(new Neuron(i == 0 ? inputs + 1 : neuron_hidden + 1));
     }
-    
+
     m_hidden.push_back(neurons);
   }
 
-  // Initialize the outputs with as many inputs as the number of neurons
+  // Initialize the output layer with as many inputs as the number of neurons
   // per hidden layer
   for(int i = 0; i < outputs; i++) {
     m_output.push_back(new Neuron(neuron_hidden + 1));
   }
 }
 
+// main update method to the neural network. The input parameter is an array of
+// input values, and returns an array of output values
 vector<float> NeuralNetwork::update(vector<float> inputs) {
-    vector<float> hiddenLayerOutput = NeuralNetwork::evaluateHiddenLayers(inputs);
-    return NeuralNetwork::evaluateOutputLayer(hiddenLayerOutput);
+  return NeuralNetwork::evaluateOutputLayer(NeuralNetwork::evaluateHiddenLayers(inputs));
 }
 
+// auxiliary method to import an array of weights to the network neurons
+// it is used to recover the state of a previously trained network
 void NeuralNetwork::importWeights(vector<float> weights) {
-
   int weights_index = 0;
 
   list<list<Neuron *> >::const_iterator it;
@@ -60,6 +60,9 @@ void NeuralNetwork::importWeights(vector<float> weights) {
   }
 }
 
+// auxiliary method to export and array of weights of the network
+// neurons. It can be used to be imported later to recover the
+// state of the network
 vector<float> NeuralNetwork::exportWeights() {
   vector<float> weights;
 
@@ -86,8 +89,12 @@ vector<float> NeuralNetwork::exportWeights() {
 }
 
 int NeuralNetwork::getWeightCount() {
-    return NeuralNetwork::exportWeights().size();
+  return NeuralNetwork::exportWeights().size();
 }
+
+//
+// Private methods
+//
 
 vector<float> NeuralNetwork::evaluateHiddenLayers(vector<float> inputs) {
   vector<float> hiddenLayerInput = inputs;
