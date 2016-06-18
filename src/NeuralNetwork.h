@@ -4,6 +4,7 @@
 #include <list>
 
 #include "Neuron.h"
+#include "NetworkConfiguration.h"
 
 using namespace std;
 
@@ -14,7 +15,8 @@ class NeuralNetwork {
   
   public:
     /* contstuctor */
-    NeuralNetwork(int inputs, int outputs, int hidden, int neuron_hidden);
+    NeuralNetwork(NetworkConfiguration configuration);
+    ~NeuralNetwork();
     
     /* main update method */
     vector<float> update(vector<float> input);

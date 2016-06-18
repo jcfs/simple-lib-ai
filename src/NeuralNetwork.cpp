@@ -1,7 +1,12 @@
 #include <list>
 #include "NeuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork(int inputs, int outputs, int hidden, int neuron_hidden) {
+NeuralNetwork::NeuralNetwork(NetworkConfiguration configuration) {
+  int inputs = configuration.getInputs();
+  int outputs = configuration.getOutputs();
+  int hidden = configuration.getHiddenLayers();
+  int neuron_hidden = configuration.getNeuronHidden();
+  
   // initialize the hidden layers - the first layer is initialized with
   // as many inputs ad the number of inputs to the network
   // the subsequent layers will be initialized with as many inputs as neurons
@@ -21,6 +26,27 @@ NeuralNetwork::NeuralNetwork(int inputs, int outputs, int hidden, int neuron_hid
     m_output.push_back(new Neuron(neuron_hidden + 1));
   }
 }
+
+NeuralNetwork::~NeuralNetwork() {
+  list<list<Neuron *> >::const_iterator it_s;
+
+  // destruct all the neuron in the hidden layers
+  for(it_s = m_hidden.begin(); it_s != m_hidden.end(); it_s++) {
+    list<Neuron *>::const_iterator it_in;
+
+    for(it_in = (*it_s).begin(); it_in != (*it_s).end(); it_in++) {
+      delete *it_in;
+    }
+  }
+
+  list<Neuron *>::const_iterator it;
+
+  // destruct all the neuron in the output layer
+  for(it = m_output.begin(); it != m_output.end(); it++) {
+    delete *it;
+  }  
+}
+
 
 // main update method to the neural network. The input parameter is an array of
 // input values, and returns an array of output values
