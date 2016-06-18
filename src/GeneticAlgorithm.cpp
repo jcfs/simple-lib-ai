@@ -82,14 +82,8 @@ list<Genome *> GeneticAlgorithm::getFittest(int n) {
   } else {
     m_population.sort(compareGenome);
 
-
-    list<Genome *>::const_iterator iterator;
-
     int i = 0;
-    for(iterator = m_population.begin(); iterator != m_population.end(); iterator++, i++) {
-      if (i == n) {
-        break;
-      }
+    for(list<Genome *>::const_iterator iterator = m_population.begin(); iterator != m_population.end() && i < n; iterator++, i++) {
       result.push_back(*iterator);
     }
   }

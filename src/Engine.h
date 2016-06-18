@@ -4,15 +4,18 @@
 #include "NetworkConfiguration.h"
 #include "GeneticAlgorithm.h"
 #include "Agent.h"
+#include "FitnessCalculator.h"
 
 class Engine {
   private:
     GeneticAlgorithm * geneticAlgorithm;
     list<Agent *> activePopulation;
-    NetworkConfiguration m_configuration;
+    NetworkConfiguration * m_configuration;
+    FitnessCalculator * m_calculator;
 
   public:
-    Engine(int populationSize, NetworkConfiguration configuration);
+    Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator);
+    ~Engine();
     
     // method that handles all the evolution logic
     // Generates a new population if needed 
@@ -23,6 +26,7 @@ class Engine {
 
   private:
     bool isPopulationDead();
+    void generateNewPopulation();
 };
 
 

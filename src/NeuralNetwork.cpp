@@ -28,10 +28,8 @@ NeuralNetwork::NeuralNetwork(NetworkConfiguration configuration) {
 }
 
 NeuralNetwork::~NeuralNetwork() {
-  list<list<Neuron *> >::const_iterator it_s;
-
   // destruct all the neuron in the hidden layers
-  for(it_s = m_hidden.begin(); it_s != m_hidden.end(); it_s++) {
+  for(list<list<Neuron *> >::const_iterator it_s = m_hidden.begin(); it_s != m_hidden.end(); it_s++) {
     list<Neuron *>::const_iterator it_in;
 
     for(it_in = (*it_s).begin(); it_in != (*it_s).end(); it_in++) {
@@ -39,10 +37,8 @@ NeuralNetwork::~NeuralNetwork() {
     }
   }
 
-  list<Neuron *>::const_iterator it;
-
   // destruct all the neuron in the output layer
-  for(it = m_output.begin(); it != m_output.end(); it++) {
+  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++) {
     delete *it;
   }  
 }

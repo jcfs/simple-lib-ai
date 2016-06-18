@@ -12,9 +12,10 @@ class Agent {
     Genome * genome;
   
   public:
-    Agent(Genome * genome, NetworkConfiguration configuration);
+    Agent(Genome * genome, NetworkConfiguration * configuration);
     ~Agent();
-  
+
+    virtual void update();
     bool isAlive() { return m_alive; }
     bool isDead() { return !m_alive; }
 };
