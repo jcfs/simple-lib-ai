@@ -3,8 +3,9 @@
 
 #include "NetworkConfiguration.h"
 #include "GeneticAlgorithm.h"
-#include "Agent.h"
 #include "FitnessCalculator.h"
+#include "AgentFactory.h"
+#include "Agent.h"
 
 class Engine {
   private:
@@ -12,9 +13,10 @@ class Engine {
     list<Agent *> activePopulation;
     NetworkConfiguration * m_configuration;
     FitnessCalculator * m_calculator;
+    AgentFactory * m_agentFactory;
 
   public:
-    Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator);
+    Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory);
     ~Engine();
     
     // method that handles all the evolution logic

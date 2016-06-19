@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Engine::Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator) {
+Engine::Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory) {
   // calculate the number of genes needed in the hidden layer
   // the number of inputs times the number of neurons per hidden player plus one (bias)
   int n_genes_hidden = configuration->getInputs()*(configuration->getNeuronHidden()+1);
@@ -19,12 +19,14 @@ Engine::Engine(int populationSize, NetworkConfiguration * configuration, Fitness
   geneticAlgorithm = new GeneticAlgorithm(populationSize, n_genes_hidden + n_genes_output);
   m_configuration = configuration;
   m_calculator = calculator;
+  m_agentFactory = agentFactory;
 }
 
 Engine::~Engine() {
   delete m_configuration;
   delete m_calculator;
   delete geneticAlgorithm;
+  delete m_agentFactory;
 
   for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
     delete * it;
@@ -72,7 +74,7 @@ void Engine::generateNewPopulation() {
   activePopulation.clear();
 
   for(list<Genome *>::const_iterator it_g = population.begin(); it_g != population.end(); it_g++) {
-    activePopulation.push_back(new Agent(*it_g, m_configuration));
+    activePopulation.push_back(m_agentFactory->newInstance(*it_g, m_configuration));
   }
 }
 

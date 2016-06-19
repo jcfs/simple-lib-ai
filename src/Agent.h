@@ -6,18 +6,16 @@
 #include "Genome.h"
 
 class Agent {
-  private:
+  protected:
     bool m_alive;
-    NeuralNetwork * network;
-    Genome * genome;
+    NeuralNetwork * m_network;
+    Genome * m_genome;
   
   public:
-    Agent(Genome * genome, NetworkConfiguration * configuration);
-    ~Agent();
-
-    virtual void update();
-    bool isAlive() { return m_alive; }
-    bool isDead() { return !m_alive; }
+    virtual ~Agent(){}
+    virtual void update() = 0;
+    virtual bool isAlive() = 0;
+    virtual bool isDead() = 0;
 };
 
 

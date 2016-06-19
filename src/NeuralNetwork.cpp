@@ -1,11 +1,11 @@
 #include <list>
 #include "NeuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork(NetworkConfiguration configuration) {
-  int inputs = configuration.getInputs();
-  int outputs = configuration.getOutputs();
-  int hidden = configuration.getHiddenLayers();
-  int neuron_hidden = configuration.getNeuronHidden();
+NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
+  int inputs = configuration->getInputs();
+  int outputs = configuration->getOutputs();
+  int hidden = configuration->getHiddenLayers();
+  int neuron_hidden = configuration->getNeuronHidden();
   
   // initialize the hidden layers - the first layer is initialized with
   // as many inputs ad the number of inputs to the network
@@ -62,7 +62,7 @@ void NeuralNetwork::importWeights(vector<float> weights) {
 
     for(neuron_it = (*it).begin(); neuron_it != (*it).end(); neuron_it++) {
       vector<float> weightsVector;      
-      for(int i = 0; i < (*neuron_it)->getWeights().size(); i++) {
+      for(size_t i = 0; i < (*neuron_it)->getWeights().size(); i++) {
         weightsVector.push_back(weights[weights_index++]);
       }
       (*neuron_it)->setWeights(weightsVector);
@@ -74,7 +74,7 @@ void NeuralNetwork::importWeights(vector<float> weights) {
   for(output_it = m_output.begin(); output_it != m_output.end(); output_it++) {
     vector<float> weightsVector;
 
-    for(int i = 0; i < (*output_it)->getWeights().size(); i++) {
+    for(size_t i = 0; i < (*output_it)->getWeights().size(); i++) {
       weightsVector.push_back(weights[weights_index++]);
     }
 
@@ -102,7 +102,7 @@ vector<float> NeuralNetwork::exportWeights() {
   list<Neuron *>::const_iterator output_it;
 
   for(output_it = m_output.begin(); output_it != m_output.end(); output_it++) {
-    for(int i = 0; i < (*output_it)->getWeights().size(); i++) {
+    for(size_t i = 0; i < (*output_it)->getWeights().size(); i++) {
       weights.push_back((*output_it)->getWeights()[i]);
     }
   }

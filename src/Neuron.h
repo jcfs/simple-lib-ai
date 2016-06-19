@@ -4,7 +4,7 @@
 #include <vector>
 #include <cmath>
 
-#define EINVAL -1
+#define ERR_INVAL -1
 
 using namespace std;
 

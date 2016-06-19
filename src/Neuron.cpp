@@ -16,7 +16,7 @@ Neuron::Neuron(Neuron * neuron) {
   m_sigmoid = neuron->getSigmoid();
   m_weights.reserve(neuron->getWeights().size());
 
-  for(int i = 0; i < neuron->getWeights().size(); i++) {
+  for(size_t i = 0; i < neuron->getWeights().size(); i++) {
     m_weights[i] = neuron->getWeights()[i];
   } 
 }
@@ -25,10 +25,10 @@ float Neuron::evaluate(vector<float> inputs) {
   float net = 0;
 
   if (inputs.size() != m_weights.size()) {
-    return EINVAL;
+    return ERR_INVAL;
   }
 
-  for(int i = 0; i < inputs.size(); i++) {
+  for(size_t i = 0; i < inputs.size(); i++) {
     net += inputs[i] * m_weights[i];
   }
 

@@ -15,7 +15,7 @@ class NeuralNetwork {
   
   public:
     /* contstuctor */
-    NeuralNetwork(NetworkConfiguration configuration);
+    NeuralNetwork(NetworkConfiguration * configuration);
     ~NeuralNetwork();
     
     /* main update method */

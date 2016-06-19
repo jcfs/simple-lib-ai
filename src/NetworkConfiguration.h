@@ -11,7 +11,7 @@ class NetworkConfiguration {
 
   public:
     // constructor
-    NetworkConfiguration(int inputs, int hidden_layers, int neuron_hidden, int outputs);
+    NetworkConfiguration(int inputs, int hidden_layers, int neuron_hidden, int outputs) : m_inputs(inputs), m_hidden_layers(hidden_layers), m_neuron_hidden(neuron_hidden), m_outputs(outputs) {}
    
     int getInputs() { return m_inputs; }
     int getHiddenLayers() { return m_hidden_layers; }

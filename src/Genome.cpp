@@ -5,10 +5,8 @@
 #include "Genome.h"
 
 Genome::Genome(int n) {
-  m_genes.reserve(n);
-
   for(int i = 0; i < n; i++) {
-    m_genes[i] = RandomUtil::nextClampedFloat();
+    m_genes.push_back(RandomUtil::nextClampedFloat());
   }
 }
 
@@ -31,7 +29,7 @@ Genome * Genome::clone() {
 }
 
 void Genome::mutate(float rate) {
-  for(int i = 0; i < m_genes.size(); i++) {
+  for(size_t i = 0; i < m_genes.size(); i++) {
     float rnd = RandomUtil::nextClampedFloat();
     if (rnd < rate) {
       m_genes[i] *= RandomUtil::nextClampedFloat();

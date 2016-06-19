@@ -57,7 +57,7 @@ Genome * GeneticAlgorithm::crossOver(Genome * father, Genome * mother) {
   vector<float> fatherGenes = father->getGenes();
   vector<float> motherGenes = mother->getGenes();
 
-  for(int i = 0; i < fatherGenes.size(); i++) {
+  for(size_t i = 0; i < fatherGenes.size(); i++) {
     if (RandomUtil::nextBoolean()) {
       babyGenes.push_back(fatherGenes[i]);
     } else {
