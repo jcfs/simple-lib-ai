@@ -1,4 +1,4 @@
-ttt-build: TickTackToeAgent.cpp main.cpp
+ttt-build: TickTackToeAgent.cpp TickTackToeAgentFactory.cpp TickTackToeFitnessCalculator.cpp main.cpp
 	g++ -o ttt $^ -L../../build/. -lai -std=c++11
 
 ttt-clean:

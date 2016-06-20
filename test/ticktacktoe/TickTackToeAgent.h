@@ -8,6 +8,8 @@
 using namespace std;
 
 class TickTackToeAgent: public Agent {
+  private:
+    char game[3][3];    
 
   public:
     TickTackToeAgent(Genome * genome, NetworkConfiguration * configuration);
@@ -16,6 +18,8 @@ class TickTackToeAgent: public Agent {
     bool isAlive();
     bool isDead();
     string toString();
+    void die();
+    char ** getGame(){ return (char **) game; }
 
 };
 

@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <iostream>
 #include <list>
 
 #include "Engine.h"
@@ -38,14 +39,21 @@ Engine::~Engine() {
 //update the engine
 void Engine::update() { 
   if (isPopulationDead()) {
+      // if all the population is dead we calculate their fitness
+      // and breed a new population
       for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
         m_calculator->calculate(*it);
       }
       geneticAlgorithm->breed();
-      this->generateNewPopulation();
+      generateNewPopulation();
   } else {
+    // if some of the agents are still alive in the active population
+    // we update all that are still alive
     for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
-      (*it)->update();
+      if ((*it)->isAlive()) {
+        cout << activePopulation.size();
+        (*it)->update();
+      }
     }
   }
 }

@@ -47,7 +47,7 @@ NeuralNetwork::~NeuralNetwork() {
 // main update method to the neural network. The input parameter is an array of
 // input values, and returns an array of output values
 vector<float> NeuralNetwork::update(vector<float> inputs) {
-  return NeuralNetwork::evaluateOutputLayer(NeuralNetwork::evaluateHiddenLayers(inputs));
+  return evaluateOutputLayer(evaluateHiddenLayers(inputs));
 }
 
 // auxiliary method to import an array of weights to the network neurons
@@ -111,7 +111,7 @@ vector<float> NeuralNetwork::exportWeights() {
 }
 
 int NeuralNetwork::getWeightCount() {
-  return NeuralNetwork::exportWeights().size();
+  return exportWeights().size();
 }
 
 //

@@ -16,6 +16,8 @@ class Agent {
     virtual void update() = 0;
     virtual bool isAlive() = 0;
     virtual bool isDead() = 0;
+
+    Genome * getGenome() { return m_genome; }
 };
 
 
