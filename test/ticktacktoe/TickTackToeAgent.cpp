@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "../../src/Util.h"
 #include "TickTackToeAgent.h"
 
 TickTackToeAgent::TickTackToeAgent(Genome * genome, NetworkConfiguration * configuration) {
@@ -20,35 +21,30 @@ TickTackToeAgent::~TickTackToeAgent() {
 void TickTackToeAgent::update() {
   vector<float> input;
 
-  cout << "\n";
   for(int i = 0; i < 3; i++)
     for(int j = 0; j < 3; j++) {
       input.push_back(game[i][j]);
-      cout << (float)game[i][j] << " ";
     }
 
-  cout << "\n";
   vector<float> output = m_network->update(input);
 
   float out = output[0];
 
   // output between 0-8
-  int mOutput = round(4.0 * (out+1.0));
+  int mOutput = round(8.0 * out);
 
   int x = mOutput / 3;
   int y = mOutput % 3;
 
-
-  cout << "\n" << out << " " << x << " " << y << "\n";
-  if (game[x][y] != 3) {
+  if (game[x][y] != BLANK) {
     m_alive = false;
   } else {
-    game[x][y] = 2;
+    game[x][y] = CROSS;
 
     for(int i = 0; i < 3; i++) {
       for(int j = 0; j < 3; j++) {
         if (game[i][j] == 3) {
-          game[i][j] = 1;
+          game[i][j] = CIRCLE;
           i=10;
           break;
         }
@@ -59,7 +55,7 @@ void TickTackToeAgent::update() {
 
     for(int i = 0; i < 3; i++) {
       for(int j = 0; j < 3; j++) {
-        if (game[i][j] == 3) over = false;
+        if (game[i][j] == BLANK) over = false;
       }
     }
 
@@ -99,7 +95,11 @@ string TickTackToeAgent::toString() {
   for(int i = 0; i < 3; i++) {
     str.append("\n");
     for(int j = 0; j < 3; j++) {
-      str.append(std::to_string(game[i][j]));
+      if (game[i][j] == BLANK) {
+        str.append("_");
+      } else {
+        str.append(std::to_string(game[i][j]));
+      }
     }
   }
 

@@ -29,8 +29,6 @@ GeneticAlgorithm::GeneticAlgorithm(int population_size, vector<float> genes) {
 }
 
 void GeneticAlgorithm::breed() {
-  cout << "Breeding\n";
-
   list<Genome *> new_population;
   list<Genome *> fittest = getFittest(2);
 
@@ -52,8 +50,6 @@ void GeneticAlgorithm::breed() {
 
   m_population = new_population;
   m_generation++;
-  
-  cout << "Breading ended\n";
 }
 
 Genome * GeneticAlgorithm::crossOver(Genome * father, Genome * mother) {

@@ -5,6 +5,10 @@
 
 #include "../../src/Agent.h"
 
+#define CIRCLE 1
+#define CROSS  2
+#define BLANK  3
+
 using namespace std;
 
 class TickTackToeAgent: public Agent {
