@@ -15,9 +15,9 @@
 int main(int argc, char ** argv) {
   srand (static_cast <unsigned> (time(0)));
 
-  NetworkConfiguration * config = new NetworkConfiguration(9,1,10,1);
+  NetworkConfiguration * config = new NetworkConfiguration(18,1,20,9);
   AgentFactory * factory = new TickTackToeAgentFactory();
-  Engine * engine = new Engine(2, config, new TickTackToeFitnessCalculator(), factory);
+  Engine * engine = new Engine(atoi(argv[1]), config, new TickTackToeFitnessCalculator(), factory);
 
   while(true) {
     engine->update();

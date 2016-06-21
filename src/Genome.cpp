@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 #include "RandomUtil.h"
 #include "Genome.h"
@@ -10,12 +11,12 @@ Genome::Genome(int n) {
   }
 }
 
-Genome::Genome(float fitness, vector<float> genes, bool mutate) {
+Genome::Genome(float fitness, vector<float> genes, bool muta) {
   m_fitness = fitness;
   m_genes = genes;
   
-  if (mutate) {
-    Genome::mutate();
+  if (muta) {
+    mutate();
   }
 }
 
@@ -25,15 +26,15 @@ Genome::Genome(float fitness, vector<float> genes) {
 }
 
 Genome * Genome::clone() {
-  return new Genome(m_fitness, m_genes);
+  return new Genome(m_fitness, m_genes, true);
 }
 
 void Genome::mutate(float rate) {
   for(size_t i = 0; i < m_genes.size(); i++) {
-    float rnd = RandomUtil::nextClampedFloat();
+    float rnd = RandomUtil::nextFloat();
     if (rnd < rate) {
       m_genes[i] *= RandomUtil::nextClampedFloat();
-    }
+    } 
   }
 }
 

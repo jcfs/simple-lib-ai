@@ -1,6 +1,7 @@
 #ifndef RANDOMUTIL_H
 #define RANDOMUTIL_H
 
+#include <iostream>
 #include <ctime>
 #include <cstdlib>
 
@@ -16,7 +17,6 @@ class RandomUtil {
     }
 
     static bool nextBoolean() {
-      srand (static_cast <unsigned> (time(0)));
       return rand() % 2 == 1;
     }
 };

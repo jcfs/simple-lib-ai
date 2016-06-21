@@ -1,6 +1,8 @@
 #ifndef AGENT_H
 #define AGENT_H
 
+#include <string>
+
 #include "NeuralNetwork.h"
 #include "NetworkConfiguration.h"
 #include "Genome.h"
@@ -16,6 +18,7 @@ class Agent {
     virtual void update() = 0;
     virtual bool isAlive() = 0;
     virtual bool isDead() = 0;
+    virtual string toString() = 0;
 
     Genome * getGenome() { return m_genome; }
 };

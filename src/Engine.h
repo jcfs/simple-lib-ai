@@ -14,6 +14,7 @@ class Engine {
     NetworkConfiguration * m_configuration;
     FitnessCalculator * m_calculator;
     AgentFactory * m_agentFactory;
+    int m_generation;
 
   public:
     Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory);
@@ -29,6 +30,7 @@ class Engine {
   private:
     bool isPopulationDead();
     void generateNewPopulation();
+    static bool compareAgent(Agent * a, Agent * b);
 };
 
 

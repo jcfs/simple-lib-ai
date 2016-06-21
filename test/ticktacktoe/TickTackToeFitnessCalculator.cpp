@@ -6,40 +6,51 @@
 void TickTackToeFitnessCalculator::calculate(Agent * agent) {
   TickTackToeAgent * tAgent = (TickTackToeAgent *) agent;
 
-  char ** game = tAgent->getGame();
-/*
-  bool pcWon = validateDiagonals(game, 1) || validateHorizontals(game, 1) || validateVerticals(game, 1);
-  bool agWon = validateDiagonals(game, 2) || validateHorizontals(game, 2) || validateVerticals(game, 2);
+  char * game = tAgent->getGame();
 
-  if (pcWon) {
-    tAgent->getGenome()->setFitness(-100);
-  } else if (agWon) {
-    tAgent->getGenome()->setFitness(100);
-  } else {
-    tAgent->getGenome()->setFitness(-100);
+  int board[8][3] = {{0,1,2},
+    {3,4,5},
+    {6,7,8},
+    {0,3,6},
+    {1,4,7},
+    {2,5,8},
+    {0,4,8},
+    {2,4,6}};
+
+
+  bool pcWin = false;
+  bool aiWin = false;
+
+  for(int i = 0; i < 8; i++) {
+    if (game[board[i][0]] == game[board[i][1]] && game[board[i][0]] == game[board[i][2]] && game[board[i][0]] != BLANK) {
+      if (game[board[i][0]] == CIRCLE) {
+        pcWin = true;
+      } else {
+        aiWin = true;
+      }
+    }
   }
-*/
+
+  bool draw = true;
+  int count = 0;
+  for(int i = 0; i < 9; i++) {
+    if (game[i] == BLANK) {
+      count++;
+    }
+  }
+
+  draw = (count == 0) && !pcWin && !aiWin;
+
+  if (agent->getGenome()->getFitness() < 0) {
+  } else {
+    if (pcWin) {
+      agent->getGenome()->setFitness(-1);
+    } else if (aiWin) {
+      agent->getGenome()->setFitness(100-count);
+    } else {
+      agent->getGenome()->setFitness(100-count-10);
+    }
+  }
+
 }
 
-bool TickTackToeFitnessCalculator::validateDiagonals(char ** game, char sym) {
-  bool d1 = (game[0][0] == game[1][1] && game[0][0] == game[2][2] && game[0][0] == sym);
-  bool d2 = (game[0][2] == game[1][1] && game[1][1] == game[2][0] && game[0][2] == sym);
-
-  return d1 || d2;
-}
-
-bool TickTackToeFitnessCalculator::validateHorizontals(char ** game, char sym) {
-  bool h1 = (game[0][0] == game[1][0] && game[0][0] == game[2][0] && game[0][0] == sym);
-  bool h2 = (game[0][1] == game[1][1] && game[0][1] == game[2][1] && game[0][1] == sym);
-  bool h3 = (game[0][2] == game[1][2] && game[0][2] == game[2][2] && game[0][2] == sym);
-
-  return h1 || h2 || h3;
-}
-
-bool TickTackToeFitnessCalculator::validateVerticals(char ** game, char sym) {
-  bool v1 = (game[0][0] == game[0][1] && game[0][0] == game[0][2] && game[0][0] == sym);
-  bool v2 = (game[1][0] == game[1][1] && game[1][0] == game[2][2] && game[1][0] == sym);
-  bool v3 = (game[2][0] == game[2][1] && game[2][0] == game[2][2] && game[2][0] == sym);
-
-  return v1 || v2 || v3;
-}

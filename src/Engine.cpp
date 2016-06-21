@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <iostream>
 #include <list>
+#include <string>
+#include <typeinfo>
 
 #include "Engine.h"
 #include "GeneticAlgorithm.h"
@@ -11,7 +13,7 @@ using namespace std;
 Engine::Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory) {
   // calculate the number of genes needed in the hidden layer
   // the number of inputs times the number of neurons per hidden player plus one (bias)
-  int n_genes_hidden = configuration->getInputs()*(configuration->getNeuronHidden()+1);
+  int n_genes_hidden = (configuration->getInputs()+1)*(configuration->getNeuronHidden());
 
   // calculate the number of genes needed in the output layer
   // the number of outputs times the number of neurons per hidden player plus one (bias)
@@ -21,6 +23,7 @@ Engine::Engine(int populationSize, NetworkConfiguration * configuration, Fitness
   m_configuration = configuration;
   m_calculator = calculator;
   m_agentFactory = agentFactory;
+  m_generation = 0;
 }
 
 Engine::~Engine() {
@@ -44,6 +47,15 @@ void Engine::update() {
       for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
         m_calculator->calculate(*it);
       }
+
+      cout << "Generation: " << m_generation++ << " size: (" << activePopulation.size() << ")\n";
+
+      if (activePopulation.size() > 0) {
+        activePopulation.sort(compareAgent);
+        list<Agent *>::const_iterator it = activePopulation.begin();
+        cout << "Fittest: " + (*it)->toString();
+      }
+
       geneticAlgorithm->breed();
       generateNewPopulation();
   } else {
@@ -74,7 +86,6 @@ bool Engine::isPopulationDead() {
 
 void Engine::generateNewPopulation() {
   list<Genome *> population = geneticAlgorithm->getPopulation();
-
   for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
     delete *it;
   }
@@ -85,3 +96,6 @@ void Engine::generateNewPopulation() {
   }
 }
 
+bool Engine::compareAgent(Agent * a, Agent * b) {
+  return a->getGenome()->getFitness() > b->getGenome()->getFitness();
+}

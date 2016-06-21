@@ -1,7 +1,7 @@
 #ifndef GENOME_H
 #define GENOME_H
 
-#define MUTATION_RATE 0.20f
+#define MUTATION_RATE 0.30f
 
 #include <vector>
 

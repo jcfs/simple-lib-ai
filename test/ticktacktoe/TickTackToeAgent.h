@@ -7,13 +7,13 @@
 
 #define CIRCLE 1
 #define CROSS  2
-#define BLANK  3
+#define BLANK  0
 
 using namespace std;
 
 class TickTackToeAgent: public Agent {
   private:
-    char game[3][3];    
+    char game[9];    
 
   public:
     TickTackToeAgent(Genome * genome, NetworkConfiguration * configuration);
@@ -23,8 +23,10 @@ class TickTackToeAgent: public Agent {
     bool isDead();
     string toString();
     void die();
-    char ** getGame(){ return (char **) game; }
+    char * getGame(){ return game; }
 
+  private:
+    string to_s(char ch);
 };
 
 
