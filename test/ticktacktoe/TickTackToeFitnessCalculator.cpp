@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "TickTackToeFitnessCalculator.h"
 #include "TickTackToeAgent.h"
 
@@ -5,7 +7,7 @@ void TickTackToeFitnessCalculator::calculate(Agent * agent) {
   TickTackToeAgent * tAgent = (TickTackToeAgent *) agent;
 
   char ** game = tAgent->getGame();
-
+/*
   bool pcWon = validateDiagonals(game, 1) || validateHorizontals(game, 1) || validateVerticals(game, 1);
   bool agWon = validateDiagonals(game, 2) || validateHorizontals(game, 2) || validateVerticals(game, 2);
 
@@ -16,8 +18,7 @@ void TickTackToeFitnessCalculator::calculate(Agent * agent) {
   } else {
     tAgent->getGenome()->setFitness(-100);
   }
-
-  tAgent->die();
+*/
 }
 
 bool TickTackToeFitnessCalculator::validateDiagonals(char ** game, char sym) {

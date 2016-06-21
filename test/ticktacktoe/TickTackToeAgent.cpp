@@ -40,7 +40,7 @@ void TickTackToeAgent::update() {
 
 
   cout << "\n" << out << " " << x << " " << y << "\n";
-  if (game[x][y] != 0) {
+  if (game[x][y] != 3) {
     m_alive = false;
   } else {
     game[x][y] = 2;

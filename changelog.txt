@@ -1,0 +1,7 @@
+TODO:
+- Bugfixing needed
+
+# 21/06/2016
+- Implemented test ttt agent factory
+- Implemented test ttt agent (rubish)
+- Implemented test ttt fitness calculator

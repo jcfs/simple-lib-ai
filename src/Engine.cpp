@@ -41,7 +41,9 @@ void Engine::update() {
   if (isPopulationDead()) {
       // if all the population is dead we calculate their fitness
       // and breed a new population
+      cout << "Everyone is dead\n";
       for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
+        cout << "calculating fitness\n";
         m_calculator->calculate(*it);
       }
       geneticAlgorithm->breed();
