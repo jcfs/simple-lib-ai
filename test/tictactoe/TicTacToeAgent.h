@@ -5,19 +5,15 @@
 
 #include "../../src/Agent.h"
 
-#define CIRCLE 1
-#define CROSS  2
-#define BLANK  0
-
 using namespace std;
 
-class TickTackToeAgent: public Agent {
+class TicTacToeAgent: public Agent {
   private:
     char game[9];    
 
   public:
-    TickTackToeAgent(Genome * genome, NetworkConfiguration * configuration);
-    ~TickTackToeAgent();
+    TicTacToeAgent(Genome * genome, NetworkConfiguration * configuration);
+    ~TicTacToeAgent();
     void update();
     bool isAlive();
     bool isDead();

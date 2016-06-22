@@ -6,10 +6,10 @@
 #include "../../src/Genome.h"
 #include "../../src/NetworkConfiguration.h"
 
-class TickTackToeAgentFactory: public AgentFactory {
+class TicTacToeAgentFactory: public AgentFactory {
   public:
-    TickTackToeAgentFactory();
-    ~TickTackToeAgentFactory();
+    TicTacToeAgentFactory();
+    ~TicTacToeAgentFactory();
     Agent * newInstance(Genome * genome, NetworkConfiguration * configuration);
 };
 

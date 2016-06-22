@@ -3,12 +3,12 @@
 
 #include "../../src/FitnessCalculator.h"
 #include "../../src/Agent.h"
-#include "TickTackToeAgent.h"
+#include "TicTacToeAgent.h"
 
-class TickTackToeFitnessCalculator: public FitnessCalculator {
+class TicTacToeFitnessCalculator: public FitnessCalculator {
   public:
-    TickTackToeFitnessCalculator(){}
-    ~TickTackToeFitnessCalculator(){}
+    TicTacToeFitnessCalculator(){}
+    ~TicTacToeFitnessCalculator(){}
     void calculate(Agent * agent);
 
   private:

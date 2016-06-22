@@ -2,9 +2,10 @@
 #include <string>
 
 #include "../../src/Util.h"
-#include "TickTackToeAgent.h"
+#include "TicTacToeAgent.h"
+#include "TicTacToeValidator.h"
 
-TickTackToeAgent::TickTackToeAgent(Genome * genome, NetworkConfiguration * configuration) {
+TicTacToeAgent::TicTacToeAgent(Genome * genome, NetworkConfiguration * configuration) {
   m_network = new NeuralNetwork(configuration);
   m_genome = genome;
   m_alive = true;
@@ -16,15 +17,13 @@ TickTackToeAgent::TickTackToeAgent(Genome * genome, NetworkConfiguration * confi
   m_network->importWeights(genome->getGenes());
 }
 
-TickTackToeAgent::~TickTackToeAgent() {
+TicTacToeAgent::~TicTacToeAgent() {
   delete m_network;
 }
 
-void TickTackToeAgent::update() {
+void TicTacToeAgent::update() {
   vector<float> input;
 
-  int empty = 0;
-  
   for(int i = 0; i < 9; i++) {
     if (game[i] == CROSS) {
       input.push_back(1);
@@ -35,7 +34,6 @@ void TickTackToeAgent::update() {
     } else {
       input.push_back(0);
       input.push_back(0);
-      empty++;
     }
   }
 
@@ -50,53 +48,41 @@ void TickTackToeAgent::update() {
       mOutput = i;
     }
   }
+    
+  game[mOutput] = CROSS;
 
-
-  if (game[mOutput] != BLANK || empty == 1) {
+  if (TicTacToeValidator::validate(game) != NOT_OVER) {
     m_alive = false;
   } else {
-    game[mOutput] = CROSS;
-
     int move;
-    do
-    {
-      move  = rand() % 9;     // just pick a random number
-    }
-    while (move < 0 || move > 8 || game[move] != BLANK);
+    do {
+      move  = rand() % 9;
+    } while (move < 0 || move > 8 || game[move] != BLANK);
+
     game[move] = CIRCLE;
 
-
-    bool over = true;
-
-    for(int i = 8; i >= 0; i--) {
-      if (game[i] == BLANK) over = false;
-    }
-
-    if (over) {
-      m_alive = false;
-    }
-
+    m_alive = TicTacToeValidator::validate(game) == NOT_OVER;
   }
 }
 
-bool TickTackToeAgent::isAlive() {
+bool TicTacToeAgent::isAlive() {
   return m_alive;
 }
 
-bool TickTackToeAgent::isDead() {
+bool TicTacToeAgent::isDead() {
   return !m_alive;
 }
 
-void TickTackToeAgent::die() {
+void TicTacToeAgent::die() {
   m_alive = false;
 }
 
-string TickTackToeAgent::toString() {
-  string str = "TickTackToeAgent: ";
+string TicTacToeAgent::toString() {
+  string str = "TicTacToeAgent: ";
 
   str.append("status=" + (m_alive ? to_string(1) : to_string(0)));
   str.append(" Genome: [");
-  for(size_t i = 0; i < 5; i++) {
+  for(size_t i = 0; i < 6; i++) {
     str.append(std::to_string(m_genome->getGenes()[i]));
     if (i+1 != m_genome->getGenes().size()) {
       str.append(", ");
@@ -116,7 +102,7 @@ string TickTackToeAgent::toString() {
   return str;
 }
 
-string TickTackToeAgent::to_s(char ch) {
+string TicTacToeAgent::to_s(char ch) {
 
   if (ch == BLANK) return string(" "); 
   if (ch == CROSS) return string("X"); 
