@@ -9,6 +9,7 @@ Genome::Genome(int n) {
   for(int i = 0; i < n; i++) {
     m_genes.push_back(RandomUtil::nextClampedFloat());
   }
+  m_fitness = 0;
 }
 
 Genome::Genome(float fitness, vector<float> genes, bool muta) {
@@ -33,7 +34,7 @@ void Genome::mutate(float rate) {
   for(size_t i = 0; i < m_genes.size(); i++) {
     float rnd = RandomUtil::nextFloat();
     if (rnd < rate) {
-      m_genes[i] *= RandomUtil::nextClampedFloat();
+      m_genes[i] = RandomUtil::nextClampedFloat();
     } 
   }
 }

@@ -1,8 +1,8 @@
 ttt-build:
-	$(MAKE) -C ticktacktoe/ all
+	$(MAKE) -C tictactoe/ all
 
 ttt-clean:
-	$(MAKE) -C ticktacktoe/ clean
+	$(MAKE) -C tictactoe/ clean
 
 all: ttt-build
 

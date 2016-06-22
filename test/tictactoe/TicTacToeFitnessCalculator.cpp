@@ -13,12 +13,12 @@ void TicTacToeFitnessCalculator::calculate(Agent * agent) {
 
   if (result == NOT_OVER) {
     // WTF
-  } else if (result == 0) {
-    agent->getGenome()->setFitness(-1);
-  } else if (result == 1) {
-    agent->getGenome()->setFitness(100);
+  } else if (result == CIRCLE) {
+    agent->getGenome()->setFitness(agent->getGenome()->getFitness() - 15);
+  } else if (result == -CROSS) {
+    agent->getGenome()->setFitness(10 + agent->getGenome()->getFitness());
   } else {
-    agent->getGenome()->setFitness(99);
+    agent->getGenome()->setFitness(15 + agent->getGenome()->getFitness());
   }
 }
 

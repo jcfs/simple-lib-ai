@@ -4,6 +4,7 @@
 #include "../../src/Util.h"
 #include "TicTacToeAgent.h"
 #include "TicTacToeValidator.h"
+#include "TicTacToePerfectAgent.h"
 
 TicTacToeAgent::TicTacToeAgent(Genome * genome, NetworkConfiguration * configuration) {
   m_network = new NeuralNetwork(configuration);
@@ -24,17 +25,15 @@ TicTacToeAgent::~TicTacToeAgent() {
 void TicTacToeAgent::update() {
   vector<float> input;
 
+  game[TicTacToePerfectAgent::play(game, CIRCLE)] = CIRCLE;
+  m_alive = TicTacToeValidator::validate(game) == NOT_OVER;
+
+  if (!m_alive) {
+    return;
+  }
+
   for(int i = 0; i < 9; i++) {
-    if (game[i] == CROSS) {
-      input.push_back(1);
-      input.push_back(0);
-    } else if (game[i] == CIRCLE) {
-      input.push_back(0);
-      input.push_back(1);
-    } else {
-      input.push_back(0);
-      input.push_back(0);
-    }
+    input.push_back(game[i]);
   }
 
   vector<float> output = m_network->update(input);
@@ -48,21 +47,9 @@ void TicTacToeAgent::update() {
       mOutput = i;
     }
   }
-    
   game[mOutput] = CROSS;
 
-  if (TicTacToeValidator::validate(game) != NOT_OVER) {
-    m_alive = false;
-  } else {
-    int move;
-    do {
-      move  = rand() % 9;
-    } while (move < 0 || move > 8 || game[move] != BLANK);
-
-    game[move] = CIRCLE;
-
-    m_alive = TicTacToeValidator::validate(game) == NOT_OVER;
-  }
+  m_alive = TicTacToeValidator::validate(game) == NOT_OVER;
 }
 
 bool TicTacToeAgent::isAlive() {
@@ -82,13 +69,16 @@ string TicTacToeAgent::toString() {
 
   str.append("status=" + (m_alive ? to_string(1) : to_string(0)));
   str.append(" Genome: [");
-  for(size_t i = 0; i < 6; i++) {
+
+  double checkSum = 0;
+  for(size_t i = 0; i < 10; i++) {
     str.append(std::to_string(m_genome->getGenes()[i]));
+    checkSum += m_genome->getGenes()[i];
     if (i+1 != m_genome->getGenes().size()) {
       str.append(", ");
     }
   }
-  str.append("...] Fitness: " + to_string(m_genome->getFitness()) + "\n");
+  str.append("...] Checksum: " + to_string(checkSum) + " Fitness: " + to_string(m_genome->getFitness()) + "\n");
 
   str.append(to_s(game[0]) + " | " + to_s(game[1]) + " | " + to_s(game[2]) + "\n"); 
   str.append("──┼───┼──\n");

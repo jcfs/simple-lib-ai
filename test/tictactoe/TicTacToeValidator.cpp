@@ -37,11 +37,11 @@ int TicTacToeValidator::validate(char * game) {
   draw = (count == 0) && !circleWin && !crossWin;
 
   if (circleWin) {
-    return -1;
+    return CIRCLE;
   } else if (crossWin) {
-    return 1;
+    return CROSS;
   } else if (draw) {
-    return 0;
+    return BLANK;
   } else {
     return NOT_OVER;
   }

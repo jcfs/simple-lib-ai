@@ -36,10 +36,7 @@ void GeneticAlgorithm::breed() {
   fittest.pop_front();
   Genome * mother = fittest.front();
 
-//  father->setFitness(0);  
   new_population.push_back(father);
-
-//  mother->setFitness(0);
   new_population.push_back(mother); 
   
   new_population.push_back(father->clone());
