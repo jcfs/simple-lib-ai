@@ -7,7 +7,7 @@ class FitnessCalculator {
   public:
     FitnessCalculator(){}
     virtual ~FitnessCalculator(){}
-    virtual void calculate(Agent * agent) = 0;
+    virtual double calculate(Agent * agent) = 0;
 };
 
 #endif

@@ -15,6 +15,10 @@ Engine::Engine(int populationSize, NetworkConfiguration * configuration, Fitness
   // the number of inputs times the number of neurons per hidden player plus one (bias)
   int n_genes_hidden = (configuration->getInputs()+1)*(configuration->getNeuronHidden());
 
+  if (configuration->getHiddenLayers() > 1) {
+    n_genes_hidden += (configuration->getNeuronHidden()+1) *configuration->getNeuronHidden()* (configuration->getHiddenLayers()-1);
+  }
+
   // calculate the number of genes needed in the output layer
   // the number of outputs times the number of neurons per hidden player plus one (bias)
   int n_genes_output = configuration->getOutputs()*(configuration->getNeuronHidden()+1);
@@ -45,7 +49,7 @@ void Engine::update() {
       // if all the population is dead we calculate their fitness
       // and breed a new population
       for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
-        m_calculator->calculate(*it);
+        (*it)->getGenome()->setFitness(m_calculator->calculate(*it));
       }
 
       cout << "Generation: " << m_generation++ << " size: (" << activePopulation.size() << ")\n";

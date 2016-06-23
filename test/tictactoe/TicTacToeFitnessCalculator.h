@@ -9,12 +9,7 @@ class TicTacToeFitnessCalculator: public FitnessCalculator {
   public:
     TicTacToeFitnessCalculator(){}
     ~TicTacToeFitnessCalculator(){}
-    void calculate(Agent * agent);
-
-  private:
-    bool validateDiagonals(char ** game, char sym);
-    bool validateHorizontals(char ** game, char sym);
-    bool validateVerticals(char ** game, char sym);
+    double calculate(Agent * agent);
 };
 
 #endif

@@ -9,7 +9,9 @@ using namespace std;
 
 class TicTacToeAgent: public Agent {
   private:
-    char game[9];    
+    int won;
+    int lost;
+    int draw;
 
   public:
     TicTacToeAgent(Genome * genome, NetworkConfiguration * configuration);
@@ -19,9 +21,12 @@ class TicTacToeAgent: public Agent {
     bool isDead();
     string toString();
     void die();
-    char * getGame(){ return game; }
+    int getWon() { return won; };
+    int getDraw() { return draw; };
+    int getLost() { return lost; };
 
   private:
+    void expandTree(char * currentGame);
     string to_s(char ch);
 };
 

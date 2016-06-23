@@ -11,45 +11,29 @@ TicTacToeAgent::TicTacToeAgent(Genome * genome, NetworkConfiguration * configura
   m_genome = genome;
   m_alive = true;
 
-  for(int i = 0; i < 9; i++) {
-      game[i] = BLANK; 
-  }
-
   m_network->importWeights(genome->getGenes());
 }
 
+// destructor we just need to destruct the neural network
 TicTacToeAgent::~TicTacToeAgent() {
   delete m_network;
 }
 
 void TicTacToeAgent::update() {
-  vector<float> input;
-
-  game[TicTacToePerfectAgent::play(game, CIRCLE)] = CIRCLE;
-  m_alive = TicTacToeValidator::validate(game) == NOT_OVER;
-
-  if (!m_alive) {
-    return;
-  }
+  char game[9];
 
   for(int i = 0; i < 9; i++) {
-    input.push_back(game[i]);
+    game[i] = BLANK;
   }
 
-  vector<float> output = m_network->update(input);
+  draw = won = lost = 0;
 
-  float max = -100;
-  int mOutput = 0;
+  // we expand all the possible games with the current network
+  // and count the number of draws/wins/losses
+  expandTree(game);
 
-  for(int i = 0; i < output.size(); i++) {
-    if (output[i] > max && game[i] == BLANK) {
-      max = output[i];
-      mOutput = i;
-    }
-  }
-  game[mOutput] = CROSS;
-
-  m_alive = TicTacToeValidator::validate(game) == NOT_OVER;
+  // and die, since this agent does not need more info
+  die();
 }
 
 bool TicTacToeAgent::isAlive() {
@@ -71,7 +55,7 @@ string TicTacToeAgent::toString() {
   str.append(" Genome: [");
 
   double checkSum = 0;
-  for(size_t i = 0; i < 10; i++) {
+  for(size_t i = 0; i < m_genome->getGenes().size(); i++) {
     str.append(std::to_string(m_genome->getGenes()[i]));
     checkSum += m_genome->getGenes()[i];
     if (i+1 != m_genome->getGenes().size()) {
@@ -79,23 +63,82 @@ string TicTacToeAgent::toString() {
     }
   }
   str.append("...] Checksum: " + to_string(checkSum) + " Fitness: " + to_string(m_genome->getFitness()) + "\n");
-
-  str.append(to_s(game[0]) + " | " + to_s(game[1]) + " | " + to_s(game[2]) + "\n"); 
-  str.append("──┼───┼──\n");
-  str.append(to_s(game[3]) + " | " + to_s(game[4]) + " | " + to_s(game[5]) + "\n"); 
-  str.append("──┼───┼──\n");
-  str.append(to_s(game[6]) + " | " + to_s(game[7]) + " | " + to_s(game[8]) + "\n"); 
-
-
+  str.append("won = " +to_string(won)+ " lost = " + to_string(lost) + " draw = " + to_string(draw) + "\n");
   str.append("\n");
-
   return str;
 }
 
-string TicTacToeAgent::to_s(char ch) {
+//
+// Private Methods
+//
+void TicTacToeAgent::expandTree(char * currentGame) {
 
+  // for every possible board
+  for(int i = 0; i < 9; i++) {
+
+    // if the current position is an empty slot
+    if (currentGame[i] == BLANK) {
+      currentGame[i] = CIRCLE;
+
+      int result = TicTacToeValidator::validate(currentGame);
+      if (result != NOT_OVER) {
+        if (result == BLANK) {
+          draw++;
+        } else {
+          lost++;
+        }
+        currentGame[i] = BLANK;
+
+        // this current game is over, we can safely return after reseting the last play
+        return;
+      }
+
+      vector<float> input;
+
+      for(int i = 0; i < 9; i++) {
+        input.push_back(currentGame[i]);
+      }
+
+      // feed the current game state to the neural network
+      vector<float> output = m_network->update(input);
+
+      float max = -1;
+      int move = 0;
+
+      // find the highest output that is an empty slot
+      // and play there
+      for(int i = 0; i < output.size(); i++) {
+        if (output[i] > max && currentGame[i] == BLANK) {
+          max = output[i];
+          move = i;
+        }
+      }
+
+      currentGame[move] = CROSS;
+
+      result = TicTacToeValidator::validate(currentGame);
+      if (result != NOT_OVER) {
+        if (result == BLANK) {
+          draw++;
+        } else if (result == CROSS) {
+          won++;
+        }
+
+        currentGame[move] = BLANK;
+        currentGame[i] = BLANK;
+        return;
+      }
+      expandTree(currentGame);
+      currentGame[move] = BLANK;
+      currentGame[i] = BLANK;
+    }
+  }
+
+}
+
+// Helper too string method
+string TicTacToeAgent::to_s(char ch) {
   if (ch == BLANK) return string(" "); 
   if (ch == CROSS) return string("X"); 
   if (ch == CIRCLE) return string("O"); 
-
 }
