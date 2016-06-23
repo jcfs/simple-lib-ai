@@ -45,11 +45,14 @@ void GeneticAlgorithm::breed() {
   new_population.push_back(father->clone());
   new_population.push_back(mother->clone());
 
-  for(int i = new_population.size(); i < m_population_size; i++) {
+  for(int i = new_population.size(); i < m_population_size - 2; i++) {
     Genome * baby = crossOver(father, mother);
     baby->mutate();
     new_population.push_back(baby);
   }
+
+  new_population.push_back(new Genome(m_genes));
+  new_population.push_back(new Genome(m_genes));
 
   m_population = new_population;
   m_generation++;
