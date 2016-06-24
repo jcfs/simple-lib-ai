@@ -15,15 +15,15 @@
 int main(int argc, char ** argv) {
   srand (static_cast <unsigned> (time(0)));
 
-  if (argc < 2 || atoi(argv[1]) < 4) {
-    cerr << "Usage: ./ttt <population_size> (population_size >= 4)" << endl;
+  if (argc < 3 || atoi(argv[1]) < 4) {
+    cerr << "Usage: ./ttt <population_size> <agent_save_file> (population_size >= 4)" << endl;
     exit(1);
   }
 
   NetworkConfiguration * config = new NetworkConfiguration(9,1,15,9);
   AgentFactory * factory = new TicTacToeAgentFactory();
 
-  Engine * engine = new Engine(atoi(argv[1]), config, new TicTacToeFitnessCalculator(), factory);
+  Engine * engine = new Engine(atoi(argv[1]), config, new TicTacToeFitnessCalculator(), factory, argv[2]);
 
   while(true) {
     engine->update();

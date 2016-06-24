@@ -53,7 +53,7 @@ vector<float> NeuralNetwork::update(vector<float> inputs) {
 
 // auxiliary method to import an array of weights to the network neurons
 // it is used to recover the state of a previously trained network
-void NeuralNetwork::importWeights(vector<float> weights) {
+void NeuralNetwork::loadWeights(vector<float> weights) {
   int weights_index = 0;
 
   list<list<Neuron *> >::const_iterator it;

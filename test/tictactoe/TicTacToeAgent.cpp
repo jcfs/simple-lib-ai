@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 
 #include "../../src/Util.h"
 #include "TicTacToeAgent.h"
@@ -11,7 +12,7 @@ TicTacToeAgent::TicTacToeAgent(Genome * genome, NetworkConfiguration * configura
   m_genome = genome;
   m_alive = true;
 
-  m_network->importWeights(genome->getGenes());
+  m_network->loadWeights(genome->getGenes());
 }
 
 // destructor we just need to destruct the neural network
@@ -21,11 +22,7 @@ TicTacToeAgent::~TicTacToeAgent() {
 
 void TicTacToeAgent::update() {
   char game[9];
-
-  for(int i = 0; i < 9; i++) {
-    game[i] = BLANK;
-  }
-
+  memset(game, BLANK, 9);
   draw = won = lost = 0;
 
   // we expand all the possible games with the current network
@@ -55,7 +52,7 @@ string TicTacToeAgent::toString() {
   str.append(" Genome: [");
 
   double checkSum = 0;
-  for(size_t i = 0; i < m_genome->getGenes().size(); i++) {
+  for(size_t i = 0; i < 4; i++) {
     str.append(std::to_string(m_genome->getGenes()[i]));
     checkSum += m_genome->getGenes()[i];
     if (i+1 != m_genome->getGenes().size()) {
@@ -73,10 +70,7 @@ string TicTacToeAgent::toString() {
 //
 void TicTacToeAgent::expandTree(char * currentGame) {
 
-  // for every possible board
   for(int i = 0; i < 9; i++) {
-
-    // if the current position is an empty slot
     if (currentGame[i] == BLANK) {
       currentGame[i] = CIRCLE;
 
@@ -107,10 +101,10 @@ void TicTacToeAgent::expandTree(char * currentGame) {
 
       // find the highest output that is an empty slot
       // and play there
-      for(int i = 0; i < output.size(); i++) {
-        if (output[i] > max && currentGame[i] == BLANK) {
-          max = output[i];
-          move = i;
+      for(int j = 0; j < output.size(); j++) {
+        if (output[j] > max && currentGame[j] == BLANK) {
+          max = output[j];
+          move = j;
         }
       }
 
@@ -133,12 +127,4 @@ void TicTacToeAgent::expandTree(char * currentGame) {
       currentGame[i] = BLANK;
     }
   }
-
-}
-
-// Helper too string method
-string TicTacToeAgent::to_s(char ch) {
-  if (ch == BLANK) return string(" "); 
-  if (ch == CROSS) return string("X"); 
-  if (ch == CIRCLE) return string("O"); 
 }

@@ -22,7 +22,7 @@ class NeuralNetwork {
     vector<float> update(vector<float> input);
     
     /* import and export information to later reuse */
-    void importWeights(vector<float> weights);
+    void loadWeights(vector<float> weights);
     vector<float> exportWeights();
     int getWeightCount();
     

@@ -28,11 +28,20 @@ GeneticAlgorithm::GeneticAlgorithm(int population_size, vector<float> genes) {
 
 }
 
-void GeneticAlgorithm::breed() {
+bool GeneticAlgorithm::breed() {
+  bool result = false;
+  
   list<Genome *> new_population;
   list<Genome *> fittest = getFittest(2);
 
   Genome * father = fittest.front();
+
+  if (father->getFitness() > m_current_fittest) {
+    result = true;
+  }
+
+  m_current_fittest = father->getFitness();
+
   fittest.pop_front();
   Genome * mother = fittest.front();
 
@@ -56,6 +65,8 @@ void GeneticAlgorithm::breed() {
 
   m_population = new_population;
   m_generation++;
+
+  return result;
 }
 
 Genome * GeneticAlgorithm::crossOver(Genome * father, Genome * mother) {

@@ -8,13 +8,15 @@ int TicTacToePerfectAgent::play(char * game, int player) {
   int move = -1;
   int score = -2;
 
-  if (game[4] == BLANK) return 4;
-
   int c = 0;
 
   for(int i = 0; i < 9; i++) {
     if (game[i] != BLANK)
       c++;
+  }
+
+  if (c == 0) {
+    return 4;
   }
 
   for(int i = 0; i < 9; ++i) {

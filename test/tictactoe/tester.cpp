@@ -3,8 +3,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <fstream>
 
 #include "TicTacToeAgent.h"
+#include "TicTacToePerfectAgent.h"
 #include "TicTacToeAgentFactory.h"
 #include "TicTacToeFitnessCalculator.h"
 #include "TicTacToeValidator.h"
@@ -47,110 +49,72 @@ string print_board(char *game) {
 }
 
 int main(int argc, char **argv) {
-  NetworkConfiguration *config = new NetworkConfiguration(9, 1, 10, 9);
+  srand(time(0));
 
-  float x[] =
-  { 0.052314, -0.354252, -0.406642, 0.196882, 0.237642, -0.239608,
-    -0.121648, -0.253348, 0.137286, -0.407625, 0.783927, 0.510906,
-    -0.726241,
-    0.152275, -0.538414, -0.201810, -0.007069, 0.006901, 0.566160,
-    -0.274537,
-    -0.346680, -0.573043, 0.185154, 0.584029, 0.272339, 0.296309,
-    0.143072,
-    -0.542114,
-    -0.039836, -0.051154, -0.320982, 0.099676, 0.474025, 0.310577,
-    0.568908,
-    -0.634362, -0.119559, -0.400811, 0.601194, -0.615684, -0.562266,
-    -0.509160,
-    0.158022, 0.189739, -0.547151, 0.321525, 0.342517, -0.026425,
-    -0.008109,
-    -0.012923, -0.494845, -0.561045, 0.501032, -0.405407, 0.150520,
-    0.401560,
-    0.032195, 0.048029, -0.555567, 0.021050, 0.269181, -0.397664,
-    0.501827,
-    -0.043461,
-    0.075414, 0.381626, -0.641751, 0.399581, -0.529302, 0.482742,
-    -0.195733,
-    -0.066356, -0.509884, -0.208611, -0.254339, -0.399268, 0.480020,
-    0.213463,
-    -0.379885, 0.102479, 0.155443, -0.702078, 0.200845, 0.119470,
-    -0.195931,
-    -0.719008, -0.106259, -0.544850, -0.505355, 0.674737, -0.381653,
-    0.001423,
-    -0.519512, -0.000279, -0.154517, 0.624834, 0.409627, 0.591153,
-    0.254266,
-    0.490464,
-    0.673988, 0.623168, -0.103219, -0.374749, -0.156215, -0.007437,
-    -0.474299,
-    -0.836921, -0.112979, -0.223687, 0.444578, -0.199314, 0.373770,
-    -0.224908,
-    -0.501360, -0.722485, -0.031938, 0.603919, 0.237231, 0.612436,
-    -0.536333,
-    -0.292824, 0.101717, -0.006313, -0.270784, -0.891853, 0.315195,
-    -0.250934,
-    0.464965, -0.012738, -0.197268, -0.684199, 0.066123, -0.054122,
-    -0.003280,
-    -0.914771, 0.121542, -0.295949, -0.317299, -0.304774, 0.302253,
-    -0.059096,
-    -0.053790, 0.025114, 0.167825, 0.733504, -0.500817, -0.803261,
-    -0.233181,
-    -0.113236, 0.391533, 0.684051, 0.428226, 0.163253, -0.525252,
-    0.392024,
-    0.103617,
-    0.275782, 0.842250, 0.707682, 0.656200, -0.298607, -0.514771,
-    -0.466567,
-    -0.239608, -0.623034, 0.245718, 0.570119, 0.480740, -0.126096,
-    0.039458,
-    0.286441,
-    0.200187, -0.194202, -0.594916, 0.804418, 0.912400, -0.607565,
-    -0.395984,
-    0.751899, -0.010732, 0.219280, 0.469511, -0.339258, -0.108083,
-    -0.802553,
-    0.119668, 0.299705, 0.164633, 0.332818, 0.460530, -0.139925,
-    -0.296002,
-    0.314340,
-    0.103734, -0.296873, 0.148593, -0.092908, -0.727212
-  };
+  vector < float >genes;
+  std::ifstream fin(argv[1]);
 
-  vector < float >genes(x, x + sizeof x / sizeof(x[0]));
+  while (!fin.eof()) {
+    double d;
+    fin >> d;
+    genes.push_back(d);
+  }
 
   char game[9];
 
+  NetworkConfiguration *config = new NetworkConfiguration(9, 1, 15, 9);
   m_network = new NeuralNetwork(config);
-  m_network->importWeights(genes);
+  m_network->loadWeights(genes);
 
-  for (int i = 0; i < 9; i++)
-    game[i] = BLANK;
+  int win = 0, loss = 0, draw = 0;
+  int k = 0;
+  while (k++ < 100000) {
+    for (int i = 0; i < 9; i++)
+      game[i] = BLANK;
 
-  while (true) {
-    int p;
-    cin >> p;
-    game[p] = CIRCLE;
-    cout << "-----------------------------\n";
-    cout << print_board(game);
-    cout << "-----------------------------\n";
+    int result = 0;
+    while ((result = TicTacToeValidator::validate(game)) == NOT_OVER) {
 
-    vector < float >input;
+      int move;
+      do {
+        move = rand() % 9;
 
-    for (int i = 0; i < 9; i++) {
-      input.push_back(game[i]);
-    }
+      } while (game[move] != BLANK);
 
-    vector < float >output = m_network->update(input);
+      game[move] = CIRCLE;
 
-    float max = -100;
-    int mOutput = 0;
+      if ((result = TicTacToeValidator::validate(game)) != NOT_OVER)
+        break;
 
-    for (int i = 0; i < output.size(); i++) {
-      if (output[i] > max && game[i] == BLANK) {
-        max = output[i];
-        mOutput = i;
+      vector < float >input;
+
+      for (int i = 0; i < 9; i++) {
+        input.push_back(game[i]);
       }
-    }
-    game[mOutput] = CROSS;
 
-    cout << "-----------------------------\n";
-    cout << print_board(game);
-    cout << "-----------------------------\n";
+      vector < float >output = m_network->update(input);
+
+      float max = -100;
+      int mOutput = 0;
+
+      for (int i = 0; i < output.size(); i++) {
+        if (output[i] > max && game[i] == BLANK) {
+          max = output[i];
+          mOutput = i;
+        }
+      }
+      game[mOutput] = CROSS;
+
+    }
+
+    if (result == CROSS) {
+      win++;
+    } else if (result == CIRCLE) {
+      loss++;
+    } else if (result == BLANK) {
+      draw++;
+    }
   }
+  cout << "Average winning percentage after " << k << " games :" <<
+    (double) (win + draw) / (win + loss + draw) * 100.0 << "\n";
 }

@@ -1,3 +1,4 @@
+#include <fstream>
 #include <cstdio>
 #include <iostream>
 #include <list>
@@ -10,7 +11,7 @@
 
 using namespace std;
 
-Engine::Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory) {
+Engine::Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory, char * saveFilePath) {
   // calculate the number of genes needed in the hidden layer
   // the number of inputs times the number of neurons per hidden player plus one (bias)
   int n_genes_hidden = (configuration->getInputs()+1)*(configuration->getNeuronHidden());
@@ -27,7 +28,7 @@ Engine::Engine(int populationSize, NetworkConfiguration * configuration, Fitness
   m_configuration = configuration;
   m_calculator = calculator;
   m_agentFactory = agentFactory;
-  m_generation = 0;
+  m_save_file_path = saveFilePath;
 }
 
 Engine::~Engine() {
@@ -46,22 +47,31 @@ Engine::~Engine() {
 //update the engine
 void Engine::update() { 
   if (isPopulationDead()) {
-      // if all the population is dead we calculate their fitness
-      // and breed a new population
-      for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
-        (*it)->getGenome()->setFitness(m_calculator->calculate(*it));
-      }
+    // if all the population is dead we calculate their fitness
+    // and breed a new population
+    for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
+      (*it)->getGenome()->setFitness(m_calculator->calculate(*it));
+    }
 
-      cout << "Generation: " << m_generation++ << " size: (" << activePopulation.size() << ")\n";
-
+    if (geneticAlgorithm->breed()) {
+      cout << "Generation: " << geneticAlgorithm->getGeneration() << " size: (" << activePopulation.size() << ")\n";
       if (activePopulation.size() > 0) {
         activePopulation.sort(compareAgent);
         list<Agent *>::const_iterator it = activePopulation.begin();
         cout << "Fittest: " + (*it)->toString();
-      }
 
-      geneticAlgorithm->breed();
-      generateNewPopulation();
+        ofstream myfile;
+        myfile.open (m_save_file_path);
+
+        for(size_t i = 0; i < (*it)->getGenome()->getGenes().size(); i++) {
+          myfile << (*it)->getGenome()->getGenes()[i] << endl;
+        }
+
+        myfile.close();
+      }
+    }
+
+    generateNewPopulation();
   } else {
     // if some of the agents are still alive in the active population
     // we update all that are still alive

@@ -14,10 +14,10 @@ class Engine {
     NetworkConfiguration * m_configuration;
     FitnessCalculator * m_calculator;
     AgentFactory * m_agentFactory;
-    int m_generation;
+    char * m_save_file_path;
 
   public:
-    Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory);
+    Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory, char * sabeFilePath);
     ~Engine();
     
     // method that handles all the evolution logic
