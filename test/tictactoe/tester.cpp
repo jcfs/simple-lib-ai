@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
 
   char game[9];
 
-  NetworkConfiguration *config = new NetworkConfiguration(9, 1, 15, 9);
+  NetworkConfiguration *config = new NetworkConfiguration(9, 1, 40, 9);
   m_network = new NeuralNetwork(config);
   m_network->loadWeights(genes);
 

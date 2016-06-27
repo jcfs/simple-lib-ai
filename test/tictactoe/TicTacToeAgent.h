@@ -12,6 +12,7 @@ class TicTacToeAgent: public Agent {
     int won;
     int lost;
     int draw;
+    int same;
 
   public:
     TicTacToeAgent(Genome * genome, NetworkConfiguration * configuration);
@@ -24,6 +25,7 @@ class TicTacToeAgent: public Agent {
     int getWon() { return won; };
     int getDraw() { return draw; };
     int getLost() { return lost; };
+    int getSame() { return same; };
 
   private:
     void expandTree(char * currentGame);

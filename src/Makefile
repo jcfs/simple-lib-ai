@@ -1,5 +1,5 @@
 objects: Genome.cpp Neuron.cpp GeneticAlgorithm.cpp NeuralNetwork.cpp Engine.cpp
-	g++ -Wall -c $^
+	g++ -Wall -c $^ -O3
 	ar rcs ../build/libai.a *.o
 
 clean:
