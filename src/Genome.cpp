@@ -27,7 +27,11 @@ Genome::Genome(float fitness, vector<float> genes) {
 }
 
 Genome * Genome::clone() {
-  return new Genome(m_fitness, m_genes, true);
+  return new Genome(m_fitness, m_genes, false);
+}
+
+Genome * Genome::clone(bool mutate) {
+  return new Genome(m_fitness, m_genes, mutate);
 }
 
 void Genome::mutate(float rate) {

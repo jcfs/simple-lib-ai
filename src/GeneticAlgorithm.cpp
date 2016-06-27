@@ -28,6 +28,12 @@ GeneticAlgorithm::GeneticAlgorithm(int population_size, vector<float> genes) {
 
 }
 
+GeneticAlgorithm::~GeneticAlgorithm() {
+  for(list<Genome *>::const_iterator it = m_population.begin(); it != m_population.end(); it++) {
+    delete (*it);
+  }
+}
+
 bool GeneticAlgorithm::breed() {
   bool result = false;
   
@@ -46,22 +52,31 @@ bool GeneticAlgorithm::breed() {
   Genome * mother = fittest.front();
 
   father->setFitness(0);
-  new_population.push_back(father);
+  new_population.push_back(father->clone());
 
   mother->setFitness(0);
-  new_population.push_back(mother); 
+  new_population.push_back(mother->clone()); 
   
-  new_population.push_back(father->clone());
-  new_population.push_back(mother->clone());
+  new_population.push_back(father->clone(true));
+  new_population.push_back(mother->clone(true));
 
-  for(int i = new_population.size(); i < m_population_size - 2; i++) {
+  for(size_t i = new_population.size(); i < m_population.size() - 2; i++) {
     Genome * baby = crossOver(father, mother);
     baby->mutate();
     new_population.push_back(baby);
   }
 
+  // two totally new genes
   new_population.push_back(new Genome(m_genes));
   new_population.push_back(new Genome(m_genes));
+
+  // free all the unused genes
+  list<Genome *>::const_iterator it = m_population.begin();
+  for(int i = 0; it != m_population.end(); it++, i++) {
+    delete (*it);
+  }
+  
+  m_population.clear();
 
   m_population = new_population;
   m_generation++;

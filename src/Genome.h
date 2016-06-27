@@ -20,6 +20,7 @@ class Genome {
     
     /* aux methods */
     Genome * clone();
+    Genome * clone(bool mutate);
     void mutate();
     void mutate(float rate);
 

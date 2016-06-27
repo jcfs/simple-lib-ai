@@ -20,6 +20,7 @@ class GeneticAlgorithm {
   public:
     GeneticAlgorithm(int population_size, int genes);
     GeneticAlgorithm(int population_size, vector<float> genes);
+    ~GeneticAlgorithm();
     
     bool breed();
     Genome * getFittest();
