@@ -24,6 +24,11 @@ int main(int argc, char ** argv) {
   Engine * engine = new Engine(20, new NetworkConfiguration(9,1,40,9), new MemoryFitnessCalculator(), new MemoryAgentFactory(), NULL);
 
   engine->update();
+  engine->update();
+  engine->update();
+  engine->update();
+  engine->update();
+
   delete engine;
   
 }
