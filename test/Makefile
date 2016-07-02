@@ -1,9 +1,13 @@
-ttt-build:
+test-build:
 	$(MAKE) -C tictactoe/ all
+	$(MAKE) -C memory/ all
+	$(MAKE) -C bootstrap/ all
 
-ttt-clean:
+test-clean:
 	$(MAKE) -C tictactoe/ clean
+	$(MAKE) -C memory/ clean
+	$(MAKE) -C bootstrap/ clean
 
-all: ttt-build
+all: test-build
 
-clean: ttt-clean
+clean: test-clean
