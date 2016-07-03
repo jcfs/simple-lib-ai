@@ -22,7 +22,7 @@ TicTacToeAgent::~TicTacToeAgent() {
 
 void TicTacToeAgent::update() {
   char game[9];
-  memset(game, BLANK, 9);
+  memset(game, BLANK, sizeof(char) * 9);
   same = draw = won = lost = 0;
 
   // we expand all the possible games with the current network
@@ -70,7 +70,6 @@ string TicTacToeAgent::toString() {
 // Private Methods
 //
 void TicTacToeAgent::expandTree(char * currentGame) {
-
   for(int i = 0; i < 9; i++) {
     if (currentGame[i] == BLANK) {
       currentGame[i] = CIRCLE;
@@ -83,22 +82,18 @@ void TicTacToeAgent::expandTree(char * currentGame) {
           lost++;
         }
         currentGame[i] = BLANK;
-
         // this current game is over, we can safely return after reseting the last play
         return;
       }
 
       vector<float> input;
 
-      for(int i = 0; i < 9; i++) {
-        input.push_back(currentGame[i]);
+      for(int k = 0; k < 9; k++) {
+        input.push_back(currentGame[k]);
       }
 
       // feed the current game state to the neural network
       vector<float> output = m_network->update(input);
-
-
-
 
       float max = -1;
       int move = 0;
@@ -112,9 +107,6 @@ void TicTacToeAgent::expandTree(char * currentGame) {
         }
       }
 
-      int m = TicTacToePerfectAgent::play(currentGame, CROSS);
-
-      if (m == move) same++;
       currentGame[move] = CROSS;
 
       result = TicTacToeValidator::validate(currentGame);

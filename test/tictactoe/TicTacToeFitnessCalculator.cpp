@@ -6,7 +6,8 @@
 
 double TicTacToeFitnessCalculator::calculate(Agent * agent) {
   TicTacToeAgent * tAgent = (TicTacToeAgent *) agent;
-  int total = tAgent->getDraw() + tAgent->getWon() + tAgent->getLost();
-  return tAgent->getSame();
+  double total = tAgent->getDraw() + tAgent->getWon() + tAgent->getLost();
+  // percentage of not lost
+  return ((total - (tAgent->getLost())) / total) * 100.0;
 }
 
