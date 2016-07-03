@@ -62,6 +62,7 @@ string TicTacToeAgent::toString() {
   str.append("...] Checksum: " + to_string(checkSum) + " Fitness: " + to_string(m_genome->getFitness()) + "\n");
   str.append("won = " +to_string(won)+ " lost = " + to_string(lost) + " draw = " + to_string(draw) + "\n");
   str.append("\n");
+
   return str;
 }
 

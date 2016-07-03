@@ -101,12 +101,13 @@ Genome * GeneticAlgorithm::crossOver(Genome * father, Genome * mother) {
   return new Genome(0, babyGenes);
 }
 
+// get the fittest element of the current population
 Genome * GeneticAlgorithm::getFittest() {
   list<Genome *> fittest = getFittest(1);
   return fittest.front();
 }
 
-
+// get the fittest n elements of the current population
 list<Genome *> GeneticAlgorithm::getFittest(int n) {
   list<Genome *> result;
 

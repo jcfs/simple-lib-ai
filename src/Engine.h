@@ -15,6 +15,7 @@ class Engine {
     FitnessCalculator * m_calculator;
     AgentFactory * m_agentFactory;
     char * m_save_file_path;
+    double m_highest_fitness;
 
   public:
     Engine(int populationSize, NetworkConfiguration * configuration, FitnessCalculator * calculator, AgentFactory * agentFactory, char * sabeFilePath);

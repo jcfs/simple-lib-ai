@@ -5,6 +5,7 @@
 #include <string>
 #include <typeinfo>
 
+#include "Util.h"
 #include "Engine.h"
 #include "GeneticAlgorithm.h"
 #include "FitnessCalculator.h"
@@ -29,6 +30,7 @@ Engine::Engine(int populationSize, NetworkConfiguration * configuration, Fitness
   m_calculator = calculator;
   m_agentFactory = agentFactory;
   m_save_file_path = saveFilePath;
+  
 }
 
 Engine::~Engine() {
@@ -53,24 +55,31 @@ void Engine::update() {
       (*it)->getGenome()->setFitness(m_calculator->calculate(*it));
     }
 
-    if (geneticAlgorithm->breed()) {
-      cout << "Generation: " << geneticAlgorithm->getGeneration() << " size: (" << activePopulation.size() << ")\n";
-      if (activePopulation.size() > 0) {
-        activePopulation.sort(compareAgent);
-        list<Agent *>::const_iterator it = activePopulation.begin();
-        cout << "Fittest: " + (*it)->toString();
+    if (activePopulation.size() > 0) {
+      activePopulation.sort(compareAgent);
+      list<Agent *>::const_iterator it = activePopulation.begin();
 
-        ofstream myfile;
-        myfile.open (m_save_file_path);
+      if ((*it)->getGenome()->getFitness() > m_highest_fitness) {
+        DEBUG("Generation: " << geneticAlgorithm->getGeneration() << " size: (" << activePopulation.size() << ")\n");
+        DEBUG((*it)->toString());
+        m_highest_fitness = (*it)->getGenome()->getFitness();
 
-        for(size_t i = 0; i < (*it)->getGenome()->getGenes().size(); i++) {
-          myfile << (*it)->getGenome()->getGenes()[i] << endl;
+        if (m_save_file_path != NULL) {
+          ofstream save_file;
+          save_file.open(m_save_file_path);
+          save_file << m_configuration->getInputs() << " " << m_configuration->getHiddenLayers() << " " << m_configuration->getNeuronHidden() << " " << m_configuration->getOutputs() << endl;
+
+          for(size_t i = 0; i < (*it)->getGenome()->getGenes().size(); i++) {
+            save_file << (*it)->getGenome()->getGenes()[i] << endl;
+          }
+
+          save_file.close();
         }
-
-        myfile.close();
       }
     }
 
+    // lets breed a new population in the GA
+    geneticAlgorithm->breed();
     generateNewPopulation();
   } else {
     // if some of the agents are still alive in the active population
@@ -99,12 +108,12 @@ bool Engine::isPopulationDead() {
 }
 
 void Engine::generateNewPopulation() {
-  list<Genome *> population = geneticAlgorithm->getPopulation();
   for(list<Agent *>::const_iterator it = activePopulation.begin(); it != activePopulation.end(); it++) {
     delete *it;
   }
   activePopulation.clear();
 
+  list<Genome *> population = geneticAlgorithm->getPopulation();
   for(list<Genome *>::const_iterator it_g = population.begin(); it_g != population.end(); it_g++) {
     activePopulation.push_back(m_agentFactory->newInstance(*it_g, m_configuration));
   }

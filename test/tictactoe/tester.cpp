@@ -54,6 +54,18 @@ int main(int argc, char **argv) {
   vector < float >genes;
   std::ifstream fin(argv[1]);
 
+  int input_size;
+  int hidden_layers;
+  int hidden_neurons;
+  int output_size;
+
+  fin >> input_size;
+  fin >> hidden_layers;
+  fin >> hidden_neurons;
+  fin >> output_size;
+
+  cout << "Loaded network: " << input_size << " " << hidden_layers << " " << hidden_neurons << " " << output_size << endl;  
+
   while (!fin.eof()) {
     double d;
     fin >> d;
@@ -62,7 +74,7 @@ int main(int argc, char **argv) {
 
   char game[9];
 
-  NetworkConfiguration *config = new NetworkConfiguration(9, 1, 40, 9);
+  NetworkConfiguration *config = new NetworkConfiguration(input_size, hidden_layers, hidden_neurons, output_size);
   m_network = new NeuralNetwork(config);
   m_network->loadWeights(genes);
 
