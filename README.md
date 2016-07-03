@@ -1,5 +1,7 @@
 ## Neural Network - Genetic Algorithm - C++ Implementation
 
+(work in progress)
+
 This project is still a work in progress and pretends to create an implementation of an Engine capable of genetically evolve AI agents that contain a feedforward neural network.
 
 All of project main structures are independent and self contained, meaning that the neural network and genetic algorithm systems are not tightly coupled.
@@ -14,7 +16,6 @@ All of project main structures are independent and self contained, meaning that 
       ├── memory      - memory source code
       └── tictactoe   - tic tac toe agent example source code
 ```
-(work in progress)
 ### How to build the library
 ```
   nn-ga$ make
