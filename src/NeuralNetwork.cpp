@@ -83,38 +83,6 @@ void NeuralNetwork::loadWeights(vector<float> weights) {
   }
 }
 
-// auxiliary method to export and array of weights of the network
-// neurons. It can be used to be imported later to recover the
-// state of the network
-vector<float> NeuralNetwork::exportWeights() {
-  vector<float> weights;
-
-  list<list<Neuron *> >::const_iterator it;
-
-  for(it = m_hidden.begin(); it != m_hidden.end(); it++) {
-    list<Neuron *>::const_iterator neuron_it;
-    for(neuron_it = (*it).begin(); neuron_it != (*it).end(); neuron_it++) {
-      for(int i = 0; (*neuron_it)->getWeights().size(); i++) {
-        weights.push_back((*neuron_it)->getWeights()[i]);
-      }
-    }
-  }
-
-  list<Neuron *>::const_iterator output_it;
-
-  for(output_it = m_output.begin(); output_it != m_output.end(); output_it++) {
-    for(size_t i = 0; i < (*output_it)->getWeights().size(); i++) {
-      weights.push_back((*output_it)->getWeights()[i]);
-    }
-  }
-
-  return weights;
-}
-
-int NeuralNetwork::getWeightCount() {
-  return exportWeights().size();
-}
-
 //
 // Private methods
 //

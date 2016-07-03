@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 
   int win = 0, loss = 0, draw = 0;
   int k = 0;
-  while (k++ < 100000) {
+  while (k++ < 200000) {
     for (int i = 0; i < 9; i++)
       game[i] = BLANK;
 

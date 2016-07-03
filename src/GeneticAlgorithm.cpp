@@ -17,7 +17,6 @@ GeneticAlgorithm::GeneticAlgorithm(int population_size, int genes) {
 }
 
 GeneticAlgorithm::GeneticAlgorithm(int population_size, vector<float> genes) {
-  
   m_population_size = population_size;
   m_generation = 0;
   m_genes = genes.size();
@@ -28,6 +27,7 @@ GeneticAlgorithm::GeneticAlgorithm(int population_size, vector<float> genes) {
 
 }
 
+// frees all the genome of the current population
 GeneticAlgorithm::~GeneticAlgorithm() {
   for(list<Genome *>::const_iterator it = m_population.begin(); it != m_population.end(); it++) {
     delete (*it);
@@ -60,6 +60,8 @@ bool GeneticAlgorithm::breed() {
   new_population.push_back(father->clone(true));
   new_population.push_back(mother->clone(true));
 
+  // crossover the mother and the father for the rest of the population
+  // and leave 2 empty slots for two totally new genes
   for(size_t i = new_population.size(); i < m_population.size() - 2; i++) {
     Genome * baby = crossOver(father, mother);
     baby->mutate();
@@ -79,6 +81,8 @@ bool GeneticAlgorithm::breed() {
   m_population.clear();
 
   m_population = new_population;
+
+  // increment the generation
   m_generation++;
 
   return result;

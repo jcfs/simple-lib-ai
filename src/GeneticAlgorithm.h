@@ -22,10 +22,20 @@ class GeneticAlgorithm {
     GeneticAlgorithm(int population_size, vector<float> genes);
     ~GeneticAlgorithm();
     
+    // breeds the current population into a new one
+    // returns a boolean saying if a new fittest genome was found
     bool breed();
+
+    // returns the fittest genome in the current population
     Genome * getFittest();
+
+    // returns the nth fittest genomes in the current population
     list<Genome *> getFittest(int n);
+
+    // return the current generation
     int getGeneration() { return m_generation; }
+
+    // return the population
     list<Genome *> getPopulation() { return m_population; }
 
     double getCurrentFittest() { return m_current_fittest; }

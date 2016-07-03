@@ -21,10 +21,8 @@ class NeuralNetwork {
     /* main update method */
     vector<float> update(vector<float> input);
     
-    /* import and export information to later reuse */
+    /* load weights */
     void loadWeights(vector<float> weights);
-    vector<float> exportWeights();
-    int getWeightCount();
     
   private:
     vector<float> evaluateHiddenLayers(vector<float> inputs);
