@@ -93,7 +93,7 @@ void TicTacToeAgent::expandTree(char * currentGame) {
       }
 
       // feed the current game state to the neural network
-      vector<float> output = m_network->update(input);
+      vector<float> output = m_network->feedForward(input);
 
       float max = -1;
       int move = 0;

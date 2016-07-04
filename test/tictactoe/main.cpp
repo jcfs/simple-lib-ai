@@ -20,7 +20,7 @@ int main(int argc, char ** argv) {
     exit(1);
   }
 
-  NetworkConfiguration * config = new NetworkConfiguration(9,1,40,9);
+  NetworkConfiguration * config = new NetworkConfiguration(9,1,10,9);
   AgentFactory * factory = new TicTacToeAgentFactory();
 
   Engine * engine = new Engine(atoi(argv[1]), config, new TicTacToeFitnessCalculator(), factory, argv[2]);

@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
         input.push_back(game[i]);
       }
 
-      vector < float >output = m_network->update(input);
+      vector < float >output = m_network->feedForward(input);
 
       float max = -100;
       int mOutput = 0;
@@ -117,6 +117,9 @@ int main(int argc, char **argv) {
       }
       game[mOutput] = CROSS;
 
+      if ((result = TicTacToeValidator::validate(game)) != NOT_OVER)
+        break;
+
     }
 
     if (result == CROSS) {
@@ -127,6 +130,9 @@ int main(int argc, char **argv) {
       draw++;
     }
   }
-  cout << "Average winning percentage after " << k << " games :" <<
+  cout << "Win: " << win << endl;
+  cout << "Lose: " << loss << endl;
+  cout << "Draw: " << draw << endl;
+  cout << "Average not losing percentage after " << k << " games :" <<
     (double) (win + draw) / (win + loss + draw) * 100.0 << "\n";
 }

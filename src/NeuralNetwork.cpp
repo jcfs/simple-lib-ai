@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include "NeuralNetwork.h"
+#include "Sigmoid.h"
 
 NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
   int inputs = configuration->getInputs();
@@ -15,7 +16,7 @@ NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
   for(int i = 0; i < hidden; i++) {
     list<Neuron *> neurons;
     for(int j = 0; j < neuron_hidden; j++) {
-      neurons.push_back(new Neuron(i == 0 ? inputs + 1 : neuron_hidden + 1));
+      neurons.push_back(new Neuron(i == 0 ? inputs + 1 : neuron_hidden + 1, true));
     }
 
     m_hidden.push_back(neurons);
@@ -24,7 +25,7 @@ NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
   // Initialize the output layer with as many inputs as the number of neurons
   // per hidden layer
   for(int i = 0; i < outputs; i++) {
-    m_output.push_back(new Neuron(neuron_hidden + 1));
+    m_output.push_back(new Neuron(neuron_hidden + 1, false));
   }
 }
 
@@ -47,8 +48,37 @@ NeuralNetwork::~NeuralNetwork() {
 
 // main update method to the neural network. The input parameter is an array of
 // input values, and returns an array of output values
-vector<float> NeuralNetwork::update(vector<float> inputs) {
+vector<float> NeuralNetwork::feedForward(vector<float> inputs) {
   return evaluateOutputLayer(evaluateHiddenLayers(inputs));
+}
+
+// main function to train the network given an input and output vectors
+// it uses backpropagation algorithm to update the network weights
+// it returns the current error
+float NeuralNetwork::train(vector<float> input, vector<float> output) {
+  size_t index = 0;
+  // feed forward the input to get an output
+  feedForward(input);
+
+  // calculate the error of the output layer based on the desired output
+  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
+    Neuron * n = *it;
+    n->setError(output[index] - n->getOutput() * Sigmoid::dSigmoid(n->getOutput()));
+  }
+
+  //TODO calculate the errors for all the hidden layers
+
+  //TODO update the weights accordingly
+
+
+  double error = 0.0;
+  // return the error
+  index = 0;
+  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
+    error += 0.5 * pow(output[index] - (*it)->getOutput(), 2);
+  }
+
+  return error;
 }
 
 // auxiliary method to import an array of weights to the network neurons

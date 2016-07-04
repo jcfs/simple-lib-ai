@@ -18,8 +18,11 @@ class NeuralNetwork {
     NeuralNetwork(NetworkConfiguration * configuration);
     ~NeuralNetwork();
     
-    /* main update method */
-    vector<float> update(vector<float> input);
+    /* feed the network forward */
+    vector<float> feedForward(vector<float> input);
+
+    /* train the network given a specific input and output */
+    float train(vector<float> input, vector<float> output);
     
     /* load weights */
     void loadWeights(vector<float> weights);
