@@ -63,7 +63,7 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
   // calculate the error of the output layer based on the desired output
   for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
     Neuron * n = *it;
-    n->setError(output[index] - n->getOutput() * Sigmoid::dSigmoid(n->getOutput()));
+    n->setError((output[index] - n->getOutput()) * Sigmoid::dSigmoid(n->getOutput()));
   }
 
   //TODO calculate the errors for all the hidden layers
