@@ -19,6 +19,9 @@ class Neuron {
     float evaluate(vector<float> inputs);
 
     /* getters/setters */
+    void setInputs(vector<float> inputs) { m_inputs = inputs; }
+    vector<float> getInputs() { return m_inputs; }
+
     void setWeights(vector<float> weights);
     vector<float> getWeights() { return m_weights; }
 
@@ -35,6 +38,7 @@ class Neuron {
     double getOutput() { return m_output; };
 
   private:
+    vector<float> m_inputs;
     vector<float> m_weights;
     vector<float> m_prev_weights_delta;
 

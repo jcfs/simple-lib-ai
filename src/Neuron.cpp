@@ -36,6 +36,8 @@ float Neuron::evaluate(vector<float> inputs) {
     return ERR_INVAL;
   }
 
+	m_inputs = inputs;
+
   for(size_t i = 0; i < inputs.size(); i++) {
     net += inputs[i] * m_weights[i];
   }
