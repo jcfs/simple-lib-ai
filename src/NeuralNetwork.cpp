@@ -66,7 +66,30 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
     n->setError((output[index] - n->getOutput()) * Sigmoid::dSigmoid(n->getOutput()));
   }
 
+	list<list<Neuron *> >::const_iterator it;
+
   //TODO calculate the errors for all the hidden layers
+	for(it = m_hidden.end(); it != m_hidden.begin(); it--) {
+		// if this is the last layer before output layer
+		list<Neuron *> h_layer = *it;
+
+		for(list<Neuron *>::const_iterator ht = h_layer.begin(); ht != h_layer.end(); ht++) {
+			Neuron * n = *ht;
+			double delta_sum = 0;
+
+			if (it == m_hidden.end()) {
+				for(list<Neuron *>::const_iterator ot = m_output.begin(); ot != m_output.end(); ot++) {
+					Neuron * on = *ot;
+					for(int i = 0; i < on->getWeights().size(); i++) {
+						delta_sum += ot->getError() * ot.getWeights()[i]; 
+					}
+				}
+			}
+			
+			n->setError(Sigmoid::dSigmoid(n->getOutput()) * delta_sum);
+		}
+	}
+
 
   //TODO update the weights accordingly
 
