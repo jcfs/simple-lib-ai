@@ -68,7 +68,7 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
 
 	list<list<Neuron *> >::const_iterator it;
 
-  //TODO calculate the errors for all the hidden layers
+  //calculate the errors for all the hidden layers
 	for(it = m_hidden.end(); it != m_hidden.begin(); it--) {
 		// if this is the last layer before output layer
 		list<Neuron *> h_layer = *it;
@@ -78,21 +78,51 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
 			double delta_sum = 0;
 
 			if (it == m_hidden.end()) {
+				// if it is the last layer we need to use the weights of the output to calculate the error
 				for(list<Neuron *>::const_iterator ot = m_output.begin(); ot != m_output.end(); ot++) {
 					Neuron * on = *ot;
-					for(int i = 0; i < on->getWeights().size(); i++) {
-						delta_sum += ot->getError() * ot.getWeights()[i]; 
+					for(size_t i = 0; i < on->getWeights().size(); i++) {
+						delta_sum += on->getError() * on->getWeights()[i]; 
 					}
 				}
+			} else {
+				// if it is not the last layer we need to iterate over the neurons of the next layer
+				++it;
+				list<Neuron *> next_layer = *(it);
+
+				for(list<Neuron *>::const_iterator nl = next_layer.begin(); nl != next_layer.end(); nl++) {
+					Neuron * nno = *nl;
+					for(size_t i = 0; i < nno->getWeights().size(); i++) {
+            delta_sum += nno->getError() * nno->getWeights()[i];
+          }
+				}
+				--it;
 			}
 			
 			n->setError(Sigmoid::dSigmoid(n->getOutput()) * delta_sum);
 		}
 	}
 
+  //update the weights accordingly
+	for(it = m_hidden.begin(); it != m_hidden.end(); it++) {
+		list<Neuron *> layer = *it;
 
-  //TODO update the weights accordingly
+		for(list<Neuron *>::const_iterator ht = layer.begin(); ht != layer.end(); ht++) {
+			Neuron * n = *ht;
 
+			for(size_t i = 0; i < n->getWeights().size() - 1; i++) {
+				n->getWeights()[i] += 0.2 * n->getPrevWeightsDelta()[i];
+				n->getPrevWeightsDelta()[i] = 0.2 * n->getError() * n->getInputs()[i];
+				n->getWeights()[i] += n->getPrevWeightsDelta()[i];
+			}
+
+			//adjust the bias
+			size_t b = n->getWeights().size() - 1;
+			n->getWeights()[b] += 0.2 * n->getPrevWeightsDelta()[b];
+      n->getPrevWeightsDelta()[b] = 0.2 * n->getError(); 
+      n->getWeights()[b] += n->getPrevWeightsDelta()[b];
+		}
+	}
 
   double error = 0.0;
   // return the error
