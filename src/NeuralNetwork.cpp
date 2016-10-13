@@ -147,8 +147,9 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
   }
 
   double error = 0.0;
-  // return the error
+
   index = 0;
+  // return the error
   for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
     error += 0.5 * pow(output[index] - (*it)->getOutput(), 2);
   }

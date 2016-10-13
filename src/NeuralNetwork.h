@@ -24,6 +24,7 @@
 #define NEURALNETWORK_H
 
 #include <list>
+#include <iterator>
 
 #include "Neuron.h"
 #include "NetworkConfiguration.h"
