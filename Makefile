@@ -1,5 +1,5 @@
 src-build:
-	$(MAKE) -C src/ objects
+	$(MAKE) -C src/ all
 
 src-clean:
 	$(MAKE) -C src/ clean
