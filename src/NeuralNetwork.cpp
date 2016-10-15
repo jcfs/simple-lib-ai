@@ -88,18 +88,19 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
     n->setError((output[index] - n->getOutput()) * Sigmoid::dSigmoid(n->getOutput()));
   }
 
-  list<list<Neuron *> >::const_iterator it;
+  list<list<Neuron *> >::reverse_iterator itr;
 
   //calculate the errors for all the hidden layers
-  for(it = m_hidden.end(); it != m_hidden.begin(); it--) {
-    // if this is the last layer before output layer
-    list<Neuron *> h_layer = *it;
+  index = 0;
 
-    for(list<Neuron *>::const_iterator ht = h_layer.begin(); ht != h_layer.end(); ht++) {
-      Neuron * n = *ht;
+  for(itr = m_hidden.rbegin(); itr != m_hidden.rend(); itr++, index++) {
+    list<Neuron *>::const_iterator ht;
+
+    for(ht = (*itr).begin(); ht != (*itr).end(); ht++) {
+      Neuron * n = (*ht);
       double delta_sum = 0;
 
-      if (it == m_hidden.end()) {
+      if (!index) {
         // if it is the last layer we need to use the weights of the output to calculate the error
         for(list<Neuron *>::const_iterator ot = m_output.begin(); ot != m_output.end(); ot++) {
           Neuron * on = *ot;
@@ -109,8 +110,8 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
         }
       } else {
         // if it is not the last layer we need to iterate over the neurons of the next layer
-        ++it;
-        list<Neuron *> next_layer = *(it);
+        --itr;
+        list<Neuron *> next_layer = *(itr);
 
         for(list<Neuron *>::const_iterator nl = next_layer.begin(); nl != next_layer.end(); nl++) {
           Neuron * nno = *nl;
@@ -118,7 +119,7 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
             delta_sum += nno->getError() * nno->getWeights()[i];
           }
         }
-        --it;
+        ++itr;
       }
 
       n->setError(Sigmoid::dSigmoid(n->getOutput()) * delta_sum);
@@ -126,6 +127,8 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
   }
 
   //update the weights accordingly
+
+  list<list<Neuron *> >::const_iterator it;
   for(it = m_hidden.begin(); it != m_hidden.end(); it++) {
     list<Neuron *> layer = *it;
 
