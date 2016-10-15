@@ -1,4 +1,4 @@
-xor-build: xor.cpp XorFitnessCalculator.cpp XorAgent.cpp XorFitnessCalculator.cpp XorAgentFactory.cpp
+xor-build: xor.cpp
 	g++ -o xor $^ -L../../build/. -lai -std=c++11 -O3
 
 xor-clean:

@@ -3,31 +3,28 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "../../src/Engine.h"
 #include "../../src/NetworkConfiguration.h"
+#include "../../src/NeuralNetwork.h"
 #include "../../src/RandomUtil.h"
 
-
-#include "XorFitnessCalculator.h"
-#include "XorAgentFactory.h"
+using namespace std;
 
 int main(int argc, char ** argv) {
+  
 
-	srand (static_cast <unsigned> (time(0)));
+  NetworkConfiguration * configuration = new NetworkConfiguration(2,1,10,1);
+  NeuralNetwork * network = new NeuralNetwork(configuration);
 
-  if (argc < 3 || atoi(argv[1]) < 4) {
-    cerr << "Usage: ./xor <population_size> <agent_save_file> (population_size >= 4)" << endl;
-    exit(1);
-  }
+  float input1[] = { 1.0 ,0.0 };
+  vector<float> input (input1, input1 + sizeof(input1) / sizeof(float));
 
- 	NetworkConfiguration * config = new NetworkConfiguration(2,1,10,1);
-  AgentFactory * factory = new XorAgentFactory();
+  float output1[] = { 1.0 };
+  vector<float> output (output1, output1 + sizeof(output) / sizeof(float));
 
-  Engine * engine = new Engine(atoi(argv[1]), config, new XorFitnessCalculator(), factory, argv[2]);
   while(true) {
-    engine->update();
+    float error = network->train(input, output);
+    cout << error << endl;
   }
 
-  delete engine;
 
 }

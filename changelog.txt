@@ -1,7 +1,7 @@
-TODO:
-- Bugfixing needed
+# 14/06/2016
+* first back propagation 
 
 # 21/06/2016
-- Implemented test ttt agent factory
-- Implemented test ttt agent (rubish)
-- Implemented test ttt fitness calculator
+* Implemented test ttt agent factory
+* Implemented test ttt agent (rubish)
+* Implemented test ttt fitness calculator
