@@ -47,7 +47,7 @@ NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
   // Initialize the output layer with as many inputs as the number of neurons
   // per hidden layer
   for(int i = 0; i < outputs; i++) {
-    m_output.push_back(new Neuron(neuron_hidden + 1, false));
+    m_output.push_back(new Neuron(neuron_hidden + 1, true));
   }
 }
 
@@ -127,26 +127,17 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
   }
 
   //update the weights accordingly
-
   list<list<Neuron *> >::const_iterator it;
   for(it = m_hidden.begin(); it != m_hidden.end(); it++) {
     list<Neuron *> layer = *it;
 
     for(list<Neuron *>::const_iterator ht = layer.begin(); ht != layer.end(); ht++) {
-      Neuron * n = *ht;
-
-      for(size_t i = 0; i < n->getWeights().size() - 1; i++) {
-        n->getWeights()[i] += 0.2 * n->getPrevWeightsDelta()[i];
-        n->getPrevWeightsDelta()[i] = 0.2 * n->getError() * n->getInputs()[i];
-        n->getWeights()[i] += n->getPrevWeightsDelta()[i];
-      }
-
-      //adjust the bias
-      size_t b = n->getWeights().size() - 1;
-      n->getWeights()[b] += 0.2 * n->getPrevWeightsDelta()[b];
-      n->getPrevWeightsDelta()[b] = 0.2 * n->getError(); 
-      n->getWeights()[b] += n->getPrevWeightsDelta()[b];
+      NeuralNetwork::updateNeuronWeight(*ht);
     }
+  }
+
+  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
+    NeuralNetwork::updateNeuronWeight(*it);
   }
 
   double error = 0.0;
@@ -195,6 +186,23 @@ void NeuralNetwork::loadWeights(vector<float> weights) {
 //
 // Private methods
 //
+
+// updates the neuron weight according to the current neuron error
+// and previous weights
+void NeuralNetwork::updateNeuronWeight(Neuron * n) {
+  for(size_t i = 0; i < n->getWeights().size() - 1; i++) {
+    n->m_weights[i] += 0.2 * n->m_prev_weights_delta[i];
+    n->m_prev_weights_delta[i] = 0.2 * n->getError() * n->getInputs()[i];
+    n->m_weights[i] += n->m_prev_weights_delta[i];
+  }
+
+  // update the neuron bias - it has no input associated so we only use 
+  //the current error
+  size_t b = n->getWeights().size() - 1;
+  n->m_weights[b] += 0.2 * n->m_prev_weights_delta[b];
+  n->m_prev_weights_delta[b] = 0.2 * n->getError();
+  n->m_weights[b] += n->m_prev_weights_delta[b];
+}
 
 vector<float> NeuralNetwork::evaluateHiddenLayers(vector<float> inputs) {
   vector<float> hiddenLayerInput = inputs;

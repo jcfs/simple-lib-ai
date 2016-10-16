@@ -32,6 +32,9 @@ using namespace std;
 
 class Neuron {
   public:
+    vector<float> m_weights;
+    vector<float> m_prev_weights_delta;
+
     /* constructors */
     Neuron(int inputs, bool sigmoid);
     Neuron(Neuron * neuron);
@@ -61,8 +64,7 @@ class Neuron {
 
   private:
     vector<float> m_inputs;
-    vector<float> m_weights;
-    vector<float> m_prev_weights_delta;
+
 
     bool m_sigmoid;
     double m_error;

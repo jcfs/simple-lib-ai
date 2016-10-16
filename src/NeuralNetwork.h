@@ -51,6 +51,7 @@ class NeuralNetwork {
     void loadWeights(vector<float> weights);
     
   private:
+    void updateNeuronWeight(Neuron * n);
     vector<float> evaluateHiddenLayers(vector<float> inputs);
     vector<float> evaluateOutputLayer(vector<float> hidden_output);
 };
