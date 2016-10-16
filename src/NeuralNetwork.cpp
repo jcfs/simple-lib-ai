@@ -47,7 +47,7 @@ NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
   // Initialize the output layer with as many inputs as the number of neurons
   // per hidden layer
   for(int i = 0; i < outputs; i++) {
-    m_output.push_back(new Neuron(neuron_hidden + 1, false));
+    m_output.push_back(new Neuron(neuron_hidden + 1, true));
   }
 }
 
@@ -136,17 +136,33 @@ float NeuralNetwork::train(vector<float> input, vector<float> output) {
       Neuron * n = *ht;
 
       for(size_t i = 0; i < n->getWeights().size() - 1; i++) {
-        n->getWeights()[i] += 0.2 * n->getPrevWeightsDelta()[i];
-        n->getPrevWeightsDelta()[i] = 0.2 * n->getError() * n->getInputs()[i];
-        n->getWeights()[i] += n->getPrevWeightsDelta()[i];
+        n->m_weights[i] += 0.2 * n->m_prev_weights_delta[i];
+        n->m_prev_weights_delta[i] = 0.2 * n->getError() * n->getInputs()[i];
+        n->m_weights[i] += n->m_prev_weights_delta[i];
       }
 
       //adjust the bias
       size_t b = n->getWeights().size() - 1;
-      n->getWeights()[b] += 0.2 * n->getPrevWeightsDelta()[b];
-      n->getPrevWeightsDelta()[b] = 0.2 * n->getError(); 
-      n->getWeights()[b] += n->getPrevWeightsDelta()[b];
+      n->m_weights[b] += 0.2 * n->m_prev_weights_delta[b];
+      n->m_prev_weights_delta[b] = 0.2 * n->getError(); 
+      n->m_weights[b] += n->m_prev_weights_delta[b];
     }
+  }
+
+  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
+    Neuron * n = *it;
+
+    for(size_t i = 0; i < n->getWeights().size() - 1; i++) {
+      n->m_weights[i] += 0.2 * n->m_prev_weights_delta[i];
+      n->m_prev_weights_delta[i] = 0.2 * n->getError() * n->getInputs()[i];
+      n->m_weights[i] += n->m_prev_weights_delta[i];
+    }
+
+    size_t b = n->getWeights().size() - 1;
+    n->m_weights[b] += 0.2 * n->m_prev_weights_delta[b];
+    n->m_prev_weights_delta[b] = 0.2 * n->getError();
+    n->m_weights[b] += n->m_prev_weights_delta[b];
+
   }
 
   double error = 0.0;
