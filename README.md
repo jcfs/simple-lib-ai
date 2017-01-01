@@ -1,5 +1,7 @@
 ## Neural Network - Genetic Algorithm - C++ Implementation
 
+[![Build Status](https://travis-ci.org/jcfs/simple-lib-ai.svg?branch=master)](https://travis-ci.org/jcfs/simple-lib-ai)
+
 (work in progress)
 
 This project is still a work in progress and pretends to create an implementation of an Engine capable of genetically evolve AI agents that contain a feedforward neural network.
