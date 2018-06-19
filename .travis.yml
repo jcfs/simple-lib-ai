@@ -1,6 +1,6 @@
-language: c
+language: cpp
 
 compiler:
-  - gcc
+  - g++
 
 script: make all
