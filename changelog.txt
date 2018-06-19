@@ -1,3 +1,7 @@
+# 19/06/2018
+* test neural network feedforward
+* slight refactor of the samples and the tests
+
 # 14/06/2016
 * first back propagation 
 

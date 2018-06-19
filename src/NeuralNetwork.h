@@ -33,6 +33,7 @@ using namespace std;
 
 class NeuralNetwork {
   private:
+    int n_inputs;
     list<list<Neuron *> > m_hidden;
     list<Neuron *> m_output; 
   
@@ -49,6 +50,8 @@ class NeuralNetwork {
     
     /* load weights */
     void loadWeights(vector<float> weights);
+
+    string toString();
     
   private:
     void updateNeuronWeight(Neuron * n);

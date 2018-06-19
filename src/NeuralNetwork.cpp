@@ -22,23 +22,25 @@
 
 #include <iostream>
 #include <list>
+#include <string>
+#include <cstring>
 #include "NeuralNetwork.h"
 #include "Sigmoid.h"
 
 NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
-  int inputs = configuration->getInputs();
+  n_inputs = configuration->getInputs();
   int outputs = configuration->getOutputs();
   int hidden = configuration->getHiddenLayers();
   int neuron_hidden = configuration->getNeuronHidden();
 
   // initialize the hidden layers - the first layer is initialized with
-  // as many inputs ad the number of inputs to the network
+  // as many inputs as the number of inputs to the network
   // the subsequent layers will be initialized with as many inputs as neurons
   // per hidden layer
   for(int i = 0; i < hidden; i++) {
     list<Neuron *> neurons;
     for(int j = 0; j < neuron_hidden; j++) {
-      neurons.push_back(new Neuron(i == 0 ? inputs + 1 : neuron_hidden + 1, true));
+      neurons.push_back(new Neuron(i == 0 ? n_inputs + 1 : neuron_hidden + 1, true));
     }
 
     m_hidden.push_back(neurons);
@@ -181,6 +183,45 @@ void NeuralNetwork::loadWeights(vector<float> weights) {
 
     (*output_it)->setWeights(weightsVector);
   }
+}
+
+string NeuralNetwork::toString() {
+  string str = "NeuralNetwork:\n";
+
+  str.append("\tinputs: " + to_string(n_inputs) + "\n");
+  str.append("\thidden layers: " + to_string(m_hidden.size()) + "\n");
+  str.append("\toutputs: " + to_string(m_output.size()) + "\n");
+
+  list<list<Neuron *> >::const_iterator it;
+  str.append("\thidden layers weights:\n");
+  size_t o = 1;
+
+  for(it = m_hidden.begin(); it != m_hidden.end(); it++) {
+    list<Neuron *>::const_iterator neuron_it;
+
+    for(neuron_it = (*it).begin(); neuron_it != (*it).end(); neuron_it++) {
+      vector<float> weightsVector; 
+      str.append("\t\th" + to_string(o++) + ": ");     
+      for(size_t i = 0; i < (*neuron_it)->getWeights().size(); i++) {
+        str.append(to_string((*neuron_it)->getWeights()[i]) + " ");
+      }
+      str.append("\n");
+    }
+  }
+
+  list<Neuron *>::const_iterator output_it;
+  
+  str.append("\toutput weights:\n");
+  o = 1;
+  for(output_it = m_output.begin(); output_it != m_output.end(); output_it++) {
+    str.append("\t\to" + to_string(o++) + ": ");
+    for(size_t i = 0; i < (*output_it)->getWeights().size(); i++) {
+      str.append(to_string((*output_it)->getWeights()[i]) + " ");
+    }
+    str.append("\n");
+  }
+ 
+  return str;
 }
 
 //

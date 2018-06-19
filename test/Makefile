@@ -1,13 +1,12 @@
 test-build:
-	$(MAKE) -C tictactoe/ all
-	$(MAKE) -C memory/ all
-	$(MAKE) -C bootstrap/ all
+	$(MAKE) -C nn/ all
 
 test-clean:
-	$(MAKE) -C tictactoe/ clean
-	$(MAKE) -C memory/ clean
-	$(MAKE) -C bootstrap/ clean
+	$(MAKE) -C nn/ clean
 
-all: test-build
+test-run:
+	./run-all.sh
+
+all: test-build test-run
 
 clean: test-clean
