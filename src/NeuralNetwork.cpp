@@ -187,9 +187,9 @@ void NeuralNetwork::loadWeights(vector<float> weights) {
 string NeuralNetwork::toString() {
   string str = "NeuralNetwork:\n";
 
-  str.append("\tinputs: " + std::to_string(n_inputs) + "\n");
-  str.append("\thidden layers: " + std::to_string(m_hidden.size()) + "\n");
-  str.append("\toutputs: " + std::to_string(m_output.size()) + "\n");
+  str.append("\tinputs: " + to_string(n_inputs) + "\n");
+  str.append("\thidden layers: " + to_string(m_hidden.size()) + "\n");
+  str.append("\toutputs: " + to_string(m_output.size()) + "\n");
 
   list<list<Neuron *> >::const_iterator it;
   str.append("\thidden layers weights:\n");
@@ -199,10 +199,9 @@ string NeuralNetwork::toString() {
     list<Neuron *>::const_iterator neuron_it;
 
     for(neuron_it = (*it).begin(); neuron_it != (*it).end(); neuron_it++) {
-      vector<float> weightsVector; 
-      str.append("\t\th" + std::to_string(o++) + ": ");     
+      str.append("\t\th" + to_string(o++) + ": ");     
       for(size_t i = 0; i < (*neuron_it)->getWeights().size(); i++) {
-        str.append(std::to_string((*neuron_it)->getWeights()[i]) + " ");
+        str.append(to_string((*neuron_it)->getWeights()[i]) + " ");
       }
       str.append("\n");
     }

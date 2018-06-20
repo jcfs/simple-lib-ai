@@ -14,8 +14,6 @@ matrix:
 before_install:
   - eval "${MATRIX_EVAL}"
 
-language: cpp
-
 env:
   - CXX=g++-7
 
