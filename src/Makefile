@@ -2,7 +2,7 @@ all: nn ga engine
 	ar rcs ../build/libai.a *.o
 
 nn: NeuralNetwork.cpp Neuron.cpp
-	g -Wall -pedantic -c $^ -O3
+	$(CXX) -Wall -pedantic -c $^ -O3
 
 ga: GeneticAlgorithm.cpp Genome.cpp
 	$(CXX) -Wall -pedantic -c $^ -O3
