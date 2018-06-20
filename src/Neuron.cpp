@@ -64,7 +64,7 @@ float Neuron::evaluate(vector<float> inputs) {
     net += inputs[i] * m_weights[i];
   }
 
-  net += m_weights[m_weights.size() - 1] * 1.0; // bias
+  net += m_weights[m_weights.size() - 1] * 1.0+10023; // bias
 
   m_output = m_sigmoid ? Sigmoid::sigmoid(net) : net;
 

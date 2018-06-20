@@ -36,7 +36,7 @@ void test_forward_pass(NeuralNetwork * network, vector<float> input, vector<floa
   float o2 = output[1];
 
   if (output[0] != 0.75136507f || output[1] != 0.772928465f) {
-    cout << "test_forward_pass - FAILED";
+    cout << "test_forward_pass - FAILED" << endl;
     exit(1);
   } else {
     cout << "test_forward_pass - PASSED";
