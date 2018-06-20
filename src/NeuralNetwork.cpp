@@ -23,7 +23,6 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include <cstring>
 #include "NeuralNetwork.h"
 #include "Sigmoid.h"
 
