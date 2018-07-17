@@ -83,31 +83,32 @@ double NeuralNetwork::backwardPass(vector<float> output) {
   size_t index = 0;
   double totalError = 0;
   // calculate the error of the output layer based on the desired output
-  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
-    Neuron * n = *it;
+  for(auto &n : m_output) {
     n->setError(0.5 * pow((output[index] - n->getOutput()), 2));
     totalError += n->getError();
+    index += 1;
   }
 
   // update the output layer weights - for that we start on the last hidden layer
   list<list<Neuron *> >::reverse_iterator itr = m_hidden.rbegin();
 
   size_t currentWeight = 0;
+
   for(list<Neuron *>::const_iterator ht = (*itr).begin(); ht != (*itr).end(); ht++, currentWeight++) {
     Neuron * n = (*ht);
     size_t c = 0;
-    for(list<Neuron *>::const_iterator ot = m_output.begin(); ot != m_output.end(); ot++, c++) {
+    for(auto &ot : m_output) {
       // calculate sigma value for the output neuron
-      double s = -(output[c] - (*ot)->getOutput())*(*ot)->getOutput()*(1 - (*ot)->getOutput());
+      double s = -(output[c] - ot->getOutput())*ot->getOutput()*(1 - ot->getOutput());
       // TODO: replace the 0.5 literal for a learning rate configurable
-      (*ot)->m_prev_weights_delta[currentWeight] = (*ot)->m_weights[currentWeight] - (0.5 * s * n->getOutput());
-      DEBUG("Neuron weight error: " << output[currentWeight] << " " << (*ot)->m_prev_weights_delta[currentWeight] << endl);
+      ot->m_prev_weights_delta[currentWeight] = ot->m_weights[currentWeight] - (0.5 * s * n->getOutput());
+      DEBUG("\tNeuron weight error: " << output[currentWeight] << " " << ot->m_prev_weights_delta[currentWeight] << endl);
+      c += 1;
     }
   }
 
   // update neuron weights
-  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++) {
-    Neuron * n = *it;
+  for(auto &n : m_output) {
     for(size_t i = 0; i < n->getWeights().size(); i++) {
       n->m_weights[i] = n->m_prev_weights_delta[i];
     }

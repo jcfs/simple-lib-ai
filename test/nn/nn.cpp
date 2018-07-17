@@ -32,14 +32,11 @@ void test_forward_pass(NeuralNetwork * network, vector<float> input, vector<floa
   network->loadWeights(weights);
   vector<float> output = network->feedForward(input);
 
-  float o1 = output[0];
-  float o2 = output[1];
-
   if (output[0] != 0.75136507f || output[1] != 0.772928465f) {
-    cout << "test_forward_pass - FAILED" << endl;
+    cout << "[*] test_forward_pass - FAILED" << endl;
     exit(1);
   } else {
-    cout << "test_forward_pass - PASSED" << endl;
+    cout << "[*] test_forward_pass - PASSED" << endl;
   }
 }
 
@@ -48,10 +45,10 @@ void test_calculate_total_error(NeuralNetwork * network, vector<float> input, ve
   double error = network->train(input, output);
 
   if (error - 0.298371f > 0.0001) {
-    cout << "test_calculate_total_error - FAILED" << endl;
+    cout << "[*] test_calculate_total_error - FAILED" << endl;
     exit(1);
   } else {
-    cout << "test_calculate_total_error - PASSED" << endl;
+    cout << "[*] test_calculate_total_error - PASSED" << endl;
   }
 }
 
@@ -65,6 +62,8 @@ int main(int argc, char ** argv) {
   vector<float> input = gen_vector(2, 0.05, 0.1);
   vector<float> output = gen_vector(2, 0.01, 0.99);
 
+  cout << "\n Running test battery \n----------------------" << endl;
   test_forward_pass(network, input, w);
   test_calculate_total_error(network, input, w, output);
+  cout << endl;
 }
