@@ -23,8 +23,10 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <cmath>
 #include "NeuralNetwork.h"
 #include "Sigmoid.h"
+#include "Util.h"
 
 NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
   n_inputs = configuration->getInputs();
@@ -75,81 +77,51 @@ vector<float> NeuralNetwork::feedForward(vector<float> inputs) {
   return evaluateOutputLayer(evaluateHiddenLayers(inputs));
 }
 
-// main function to train the network given an input and output vectors
-// it uses backpropagation algorithm to update the network weights
-// it returns the current error
-float NeuralNetwork::train(vector<float> input, vector<float> output) {
+// backward pass to update the network weights based on the current error
+// we first calculate the total error
+double NeuralNetwork::backwardPass(vector<float> output) {
   size_t index = 0;
-  // feed forward the input to get an output
-  feedForward(input);
-
+  double totalError = 0;
   // calculate the error of the output layer based on the desired output
   for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
     Neuron * n = *it;
-    n->setError((output[index] - n->getOutput()) * Sigmoid::dSigmoid(n->getOutput()));
+    n->setError(0.5 * pow((output[index] - n->getOutput()), 2));
+    totalError += n->getError();
   }
 
-  list<list<Neuron *> >::reverse_iterator itr;
+  // update the output layer weights - for that we start on the last hidden layer
+  list<list<Neuron *> >::reverse_iterator itr = m_hidden.rbegin();
 
-  //calculate the errors for all the hidden layers
-  index = 0;
-
-  for(itr = m_hidden.rbegin(); itr != m_hidden.rend(); itr++, index++) {
-    list<Neuron *>::const_iterator ht;
-
-    for(ht = (*itr).begin(); ht != (*itr).end(); ht++) {
-      Neuron * n = (*ht);
-      double delta_sum = 0;
-
-      if (!index) {
-        // if it is the last layer we need to use the weights of the output to calculate the error
-        for(list<Neuron *>::const_iterator ot = m_output.begin(); ot != m_output.end(); ot++) {
-          Neuron * on = *ot;
-          for(size_t i = 0; i < on->getWeights().size(); i++) {
-            delta_sum += on->getError() * on->getWeights()[i]; 
-          }
-        }
-      } else {
-        // if it is not the last layer we need to iterate over the neurons of the next layer
-        --itr;
-        list<Neuron *> next_layer = *(itr);
-
-        for(list<Neuron *>::const_iterator nl = next_layer.begin(); nl != next_layer.end(); nl++) {
-          Neuron * nno = *nl;
-          for(size_t i = 0; i < nno->getWeights().size(); i++) {
-            delta_sum += nno->getError() * nno->getWeights()[i];
-          }
-        }
-        ++itr;
-      }
-
-      n->setError(Sigmoid::dSigmoid(n->getOutput()) * delta_sum);
+  size_t currentWeight = 0;
+  for(list<Neuron *>::const_iterator ht = (*itr).begin(); ht != (*itr).end(); ht++, currentWeight++) {
+    Neuron * n = (*ht);
+    size_t c = 0;
+    for(list<Neuron *>::const_iterator ot = m_output.begin(); ot != m_output.end(); ot++, c++) {
+      // calculate sigma value for the output neuron
+      double s = -(output[c] - (*ot)->getOutput())*(*ot)->getOutput()*(1 - (*ot)->getOutput());
+      // TODO: replace the 0.5 literal for a learning rate configurable
+      (*ot)->m_prev_weights_delta[currentWeight] = (*ot)->m_weights[currentWeight] - (0.5 * s * n->getOutput());
+      DEBUG("Neuron weight error: " << output[currentWeight] << " " << (*ot)->m_prev_weights_delta[currentWeight] << endl);
     }
   }
 
-  //update the weights accordingly
-  list<list<Neuron *> >::const_iterator it;
-  for(it = m_hidden.begin(); it != m_hidden.end(); it++) {
-    list<Neuron *> layer = *it;
-
-    for(list<Neuron *>::const_iterator ht = layer.begin(); ht != layer.end(); ht++) {
-      NeuralNetwork::updateNeuronWeight(*ht);
+  // update neuron weights
+  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
+    Neuron * n = *it;
+    for(size_t i = 0; i < n->getWeights().size(); i++) {
+      n->m_weights[i] = n->m_prev_weights_delta[i];
     }
   }
 
-  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
-    NeuralNetwork::updateNeuronWeight(*it);
-  }
+  return totalError;
+}
 
-  double error = 0.0;
-
-  index = 0;
-  // return the error
-  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
-    error += 0.5 * pow(output[index] - (*it)->getOutput(), 2);
-  }
-
-  return error;
+// main function to train the network given an input and output vectors
+// it uses backpropagation algorithm to update the network weights
+// it returns the current error
+double NeuralNetwork::train(vector<float> input, vector<float> output) {
+  feedForward(input);
+  return backwardPass(output);
 }
 
 // auxiliary method to import an array of weights to the network neurons
@@ -225,24 +197,6 @@ string NeuralNetwork::toString() {
 //
 // Private methods
 //
-
-// updates the neuron weight according to the current neuron error
-// and previous weights
-void NeuralNetwork::updateNeuronWeight(Neuron * n) {
-  for(size_t i = 0; i < n->getWeights().size() - 1; i++) {
-    n->m_weights[i] += 0.2 * n->m_prev_weights_delta[i];
-    n->m_prev_weights_delta[i] = 0.2 * n->getError() * n->getInputs()[i];
-    n->m_weights[i] += n->m_prev_weights_delta[i];
-  }
-
-  // update the neuron bias - it has no input associated so we only use 
-  //the current error
-  size_t b = n->getWeights().size() - 1;
-  n->m_weights[b] += 0.2 * n->m_prev_weights_delta[b];
-  n->m_prev_weights_delta[b] = 0.2 * n->getError();
-  n->m_weights[b] += n->m_prev_weights_delta[b];
-}
-
 vector<float> NeuralNetwork::evaluateHiddenLayers(vector<float> inputs) {
   vector<float> hiddenLayerInput = inputs;
   vector<float> hiddenLayerOutput;

@@ -7,6 +7,6 @@ test-clean:
 test-run:
 	./run-all.sh
 
-all: test-build test-run
+all: test-build
 
 clean: test-clean

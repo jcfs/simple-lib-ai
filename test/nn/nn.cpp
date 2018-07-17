@@ -11,6 +11,10 @@
 
 using namespace std;
 
+bool AreSame(double a, double b) {
+    return std::fabs(a - b) < std::numeric_limits<double>::epsilon();
+}
+
 vector<float> gen_vector(int n_args, ...) {
   vector<float> result;
   
@@ -39,7 +43,19 @@ void test_forward_pass(NeuralNetwork * network, vector<float> input, vector<floa
     cout << "test_forward_pass - FAILED" << endl;
     exit(1);
   } else {
-    cout << "test_forward_pass - PASSED";
+    cout << "test_forward_pass - PASSED" << endl;
+  }
+}
+
+void test_calculate_total_error(NeuralNetwork * network, vector<float> input, vector<float> weights, vector<float> output) {
+  network->loadWeights(weights);
+  double error = network->train(input, output);
+
+  if (error - 0.298371f > 0.0001) {
+    cout << "test_calculate_total_error - FAILED" << endl;
+    exit(1);
+  } else {
+    cout << "test_calculate_total_error - PASSED" << endl;
   }
 }
 
@@ -51,6 +67,8 @@ int main(int argc, char ** argv) {
 
   vector<float> w = gen_vector(12, 0.15f, 0.2f, 0.35f, 0.25, 0.30, 0.35, 0.40, 0.45, 0.60, 0.50, 0.55, 0.60);
   vector<float> input = gen_vector(2, 0.05, 0.1);
+  vector<float> output = gen_vector(2, 0.01, 0.99);
 
   test_forward_pass(network, input, w);
+  test_calculate_total_error(network, input, w, output);
 }

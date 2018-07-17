@@ -44,9 +44,12 @@ class NeuralNetwork {
     
     /* feed the network forward */
     vector<float> feedForward(vector<float> input);
+    
+    /* backward pass to update the weights based on the current error */
+    double backwardPass(vector<float> output);
 
     /* train the network given a specific input and output */
-    float train(vector<float> input, vector<float> output);
+    double train(vector<float> input, vector<float> output);
     
     /* load weights */
     void loadWeights(vector<float> weights);
@@ -54,7 +57,6 @@ class NeuralNetwork {
     string toString();
     
   private:
-    void updateNeuronWeight(Neuron * n);
     vector<float> evaluateHiddenLayers(vector<float> inputs);
     vector<float> evaluateOutputLayer(vector<float> hidden_output);
 };
