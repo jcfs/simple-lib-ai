@@ -11,10 +11,6 @@
 
 using namespace std;
 
-bool AreSame(double a, double b) {
-    return std::fabs(a - b) < std::numeric_limits<double>::epsilon();
-}
-
 vector<float> gen_vector(int n_args, ...) {
   vector<float> result;
   

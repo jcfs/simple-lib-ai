@@ -106,7 +106,7 @@ double NeuralNetwork::backwardPass(vector<float> output) {
   }
 
   // update neuron weights
-  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++, index++) {
+  for(list<Neuron *>::const_iterator it = m_output.begin(); it != m_output.end(); it++) {
     Neuron * n = *it;
     for(size_t i = 0; i < n->getWeights().size(); i++) {
       n->m_weights[i] = n->m_prev_weights_delta[i];
