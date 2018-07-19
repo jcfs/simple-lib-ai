@@ -1,3 +1,7 @@
+# 17/07/2018
+* back propagation refactor - output layer Implemented
+* first tests on back propagation code
+
 # 19/06/2018
 * test neural network feedforward
 * slight refactor of the samples and the tests

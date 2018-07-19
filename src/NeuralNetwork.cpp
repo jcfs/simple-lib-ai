@@ -28,30 +28,18 @@
 #include "Sigmoid.h"
 #include "Util.h"
 
+NeuralNetwork::NeuralNetwork(int inputs, int outputs, int hidden_layers, int neuron_hidden) {
+  n_inputs = inputs;
+  n_outputs = outputs;
+  n_hidden_layers = hidden_layers;
+  n_neuron_hidden = neuron_hidden;
+}
+
 NeuralNetwork::NeuralNetwork(NetworkConfiguration * configuration) {
   n_inputs = configuration->getInputs();
-  int outputs = configuration->getOutputs();
-  int hidden = configuration->getHiddenLayers();
-  int neuron_hidden = configuration->getNeuronHidden();
-
-  // initialize the hidden layers - the first layer is initialized with
-  // as many inputs as the number of inputs to the network
-  // the subsequent layers will be initialized with as many inputs as neurons
-  // per hidden layer
-  for(int i = 0; i < hidden; i++) {
-    list<Neuron *> neurons;
-    for(int j = 0; j < neuron_hidden; j++) {
-      neurons.push_back(new Neuron(i == 0 ? n_inputs + 1 : neuron_hidden + 1, true));
-    }
-
-    m_hidden.push_back(neurons);
-  }
-
-  // Initialize the output layer with as many inputs as the number of neurons
-  // per hidden layer
-  for(int i = 0; i < outputs; i++) {
-    m_output.push_back(new Neuron(neuron_hidden + 1, true));
-  }
+  n_outputs = configuration->getOutputs();
+  n_hidden_layers = configuration->getHiddenLayers();
+  n_neuron_hidden = configuration->getNeuronHidden();
 }
 
 NeuralNetwork::~NeuralNetwork() {
@@ -70,6 +58,26 @@ NeuralNetwork::~NeuralNetwork() {
   }  
 }
 
+void NeuralNetwork::init() {
+  // initialize the hidden layers - the first layer is initialized with
+  // as many inputs as the number of inputs to the network
+  // the subsequent layers will be initialized with as many inputs as neurons
+  // per hidden layer
+  for(int i = 0; i < this->n_hidden_layers; i++) {
+    list<Neuron *> neurons;
+    for(int j = 0; j < this->n_neuron_hidden; j++) {
+      neurons.push_back(new Neuron(i == 0 ? this->n_inputs + 1 : this->n_neuron_hidden + 1, true));
+    }
+
+    this->m_hidden.push_back(neurons);
+  }
+
+  // Initialize the output layer with as many inputs as the number of neurons
+  // per hidden layer
+  for(int i = 0; i < this->n_outputs; i++) {
+    this->m_output.push_back(new Neuron(n_neuron_hidden + 1, true));
+  }
+}
 
 // main update method to the neural network. The input parameter is an array of
 // input values, and returns an array of output values
@@ -102,7 +110,7 @@ double NeuralNetwork::backwardPass(vector<float> output) {
       double s = -(output[c] - ot->getOutput())*ot->getOutput()*(1 - ot->getOutput());
       // TODO: replace the 0.5 literal for a learning rate configurable
       ot->m_prev_weights_delta[currentWeight] = ot->m_weights[currentWeight] - (0.5 * s * n->getOutput());
-      DEBUG("\tNeuron weight error: " << output[currentWeight] << " " << ot->m_prev_weights_delta[currentWeight] << endl);
+      //DEBUG("\tNeuron weight error: " << output[currentWeight] << " " << ot->m_prev_weights_delta[currentWeight] << endl);
       c += 1;
     }
   }

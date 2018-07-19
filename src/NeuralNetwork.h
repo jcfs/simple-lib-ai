@@ -29,18 +29,20 @@
 #include "Neuron.h"
 #include "NetworkConfiguration.h"
 
-using namespace std;
-
 class NeuralNetwork {
   private:
-    int n_inputs;
+    int n_inputs, n_outputs;
+    int n_hidden_layers, n_neuron_hidden;
     list<list<Neuron *> > m_hidden;
     list<Neuron *> m_output; 
   
   public:
     /* contstuctor */
+    NeuralNetwork(int inputs, int outputs, int hidden_layers, int neuron_hidden);
     NeuralNetwork(NetworkConfiguration * configuration);
     ~NeuralNetwork();
+
+    void init();
     
     /* feed the network forward */
     vector<float> feedForward(vector<float> input);
