@@ -42,7 +42,7 @@ int main(int argc, char ** argv) {
   
   srand (static_cast <unsigned> (time(0)));
 
-  NetworkConfiguration * configuration = new NetworkConfiguration(2,1,16,1);
+  NetworkConfiguration * configuration = new NetworkConfiguration(2,1,32,1);
   NeuralNetwork * network = new NeuralNetwork(configuration);
 
   network->init();
