@@ -47,6 +47,6 @@ Current output: 2152738
 0, 1 => 0.93
 1, 1 => 0.07
 0, 0 => 0.07
-``
+```
 
 The implementation is suboptimal since it is not using backpropagation yet.
